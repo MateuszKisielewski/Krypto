@@ -7,7 +7,7 @@ public class DesAlgorithm {
         for (int i=0; i<table_bytes.length; i++){
             output_plain_block <<= 1;
             int bit_position = table_bytes[i];
-            long extracted_bit = (bytes_to_input - bit_position) & 1L;
+            long extracted_bit = (input_plain_block >>> (bytes_to_input - bit_position) & 1L;
             output_plain_block |= extracted_bit;
         }
         return output_plain_block;
