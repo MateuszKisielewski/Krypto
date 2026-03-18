@@ -1,18 +1,18 @@
-package pl.desx.cryptography;
+package main.java.pl.desx.cryptography;
 
 import java.security.SecureRandom;
 
 public class DesAlgorithm {
 
     public long permute(long input_plain_text, byte[] table_bytes, int important_bytes){
-        long output_plain_text = 0;
+        long output_permutate_text = 0;
         for (int i=0; i<table_bytes.length; i++){
-            output_plain_text <<= 1;
+            output_permutate_text <<= 1;
             int bit_position = table_bytes[i];
             long extracted_bit = (input_plain_text >>> (important_bytes - bit_position)) & 1L;
-            output_plain_text |= extracted_bit;
+            output_permutate_text |= extracted_bit;
         }
-        return output_plain_text;
+        return output_permutate_text;
     }
 
     public long[] split_LPT_RPT(long output_IP) {
@@ -31,11 +31,16 @@ public class DesAlgorithm {
 
         long key_56 = permute(key_64, DesConstants.permuted_choice_1, 64);
 
-        long left_key_28 = key_56 >>> 28;
-        long right_key_28 = (key_56 << 36) >>> 36;
+        long left_key_28;
+        long right_key_28;
         int shift = 0;
+        long shifted_key_56 = key_56;
 
         for (int i = 1; i<=16; i++){
+            left_key_28 = shifted_key_56 >>> 28;
+            right_key_28 = (shifted_key_56 << 36) >>> 36;
+            shift = 0;
+
             if (i == 1 || i == 2 || i == 9 || i == 16){
                 shift = 1;
             }
@@ -53,7 +58,7 @@ public class DesAlgorithm {
             right_key_28 &= 0xFFFFFFFL;
             right_key_28 |= temp_bit;
 
-            long shifted_key_56 = left_key_28;
+            shifted_key_56 = left_key_28;
             shifted_key_56 <<= 28;
             shifted_key_56 |= right_key_28;
 

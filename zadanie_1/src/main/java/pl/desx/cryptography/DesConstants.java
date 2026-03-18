@@ -1,4 +1,4 @@
-package pl.desx.cryptography;
+package main.java.pl.desx.cryptography;
 
 public class DesConstants {
     public static byte[] initial_permutation = {
@@ -39,10 +39,6 @@ public class DesConstants {
             1,  15, 23, 26, 5,  18, 31, 10,
             2,  8,  24, 14, 32, 27, 3,  9,
             19, 13, 30, 6,  22, 11, 4,  25
-    };
-
-    public static byte[] shift_rotation = {
-            1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1
     };
 
     public static final byte[] permuted_choice_1 = {
