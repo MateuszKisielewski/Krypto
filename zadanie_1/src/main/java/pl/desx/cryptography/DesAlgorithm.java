@@ -1,7 +1,5 @@
 package pl.desx.cryptography;
 
-import java.security.SecureRandom;
-
 public class DesAlgorithm {
 
     public long permute(long input_plain_text, byte[] table_bytes, int important_bytes){
@@ -74,13 +72,13 @@ public class DesAlgorithm {
         long sboxed_value = 0;
         for (int j=0; j<8; j++){
             long first_byte = xored_text >>> (48 - (j * 6) - 1) & 1L;
-            long sixth_byte = xored_text >> (48 - (j * 6) - 6) & 1L;
+            long sixth_byte = xored_text >>> (48 - (j * 6) - 6) & 1L;
             long four_middle_bytes = xored_text >>> (48 - (j * 6) - 5) & 15L;
 
             long row_bytes_sbox = (first_byte << 1) | sixth_byte ;
             long column_bytes_sbox = four_middle_bytes;
 
-            long value = DesConstants.s_box[j][(int)column_bytes_sbox][(int)row_bytes_sbox];
+            long value = DesConstants.s_box[j][(int)row_bytes_sbox][(int)column_bytes_sbox];
 
             sboxed_value <<= 4;
             sboxed_value |= value;
@@ -89,21 +87,17 @@ public class DesAlgorithm {
         return sboxed_value;
     }
 
-    public long main_algorythm(long plain_text) {
-        SecureRandom sr = new SecureRandom();
-        long key_64 = sr.nextLong();
-
+    public long main_algorythm(long plain_text, long key_64) {
         long ciphered_text = 0;
 
         long after_IP = permute(plain_text, DesConstants.initial_permutation, 64);
-        long swapped_output = 0;
+        long[] parts = split_LPT_RPT(after_IP);
+        long LPT = parts[0];
+        long RPT = parts[1];
+
+        long[] transformed_keys_48 = generate_sub_keys(key_64);
 
         for (int i=0; i<16; i++){
-            long[] parts = split_LPT_RPT(after_IP);
-            long LPT = parts[0];
-            long RPT = parts[1];
-
-            long[] transformed_keys_48 = generate_sub_keys(key_64);
             long expanded_right_text_48 = permute(RPT, DesConstants.expansion_permutation, 32);
 
             long text_after_xor = xor(expanded_right_text_48, transformed_keys_48[i]);
@@ -117,9 +111,9 @@ public class DesAlgorithm {
             long temp = RPT;
             RPT = xored_text;
             LPT = temp;
-
-            swapped_output = (LPT << 32) | RPT;
         }
+
+        long swapped_output = (RPT << 32) | LPT;
         ciphered_text = permute(swapped_output, DesConstants.final_permutation, 64);
 
         return ciphered_text;
