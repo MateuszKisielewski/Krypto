@@ -73,9 +73,9 @@ public class DesAlgorithm {
             long RPT = parts[1];
 
             SecureRandom sr = new SecureRandom();
-            long key = sr.nextLong();
-            long[] transformed_keys = generate_sub_keys(key);
-            long expanded_text = permute(RPT, DesConstants.expansion_permutation, 32)
+            long key_64 = sr.nextLong();
+            long[] transformed_keys_48 = generate_sub_keys(key);
+            long expanded_text_48 = permute(RPT, DesConstants.expansion_permutation, 32)
         }
     }
 }
