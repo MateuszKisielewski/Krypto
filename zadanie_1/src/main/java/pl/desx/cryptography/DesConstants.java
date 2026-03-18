@@ -1,4 +1,4 @@
-package pl.desx.cryptography;
+package main.java.pl.desx.cryptography;
 
 public class DesConstants {
     public static byte[] initial_permutation = {
