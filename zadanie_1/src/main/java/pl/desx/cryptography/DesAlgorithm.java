@@ -1,4 +1,4 @@
-package main.java.pl.desx.cryptography;
+package pl.desx.cryptography;
 
 import java.security.SecureRandom;
 
@@ -65,6 +65,25 @@ public class DesAlgorithm {
         return sub_keys;
     }
 
+    public long s_boxed_values(long xored_text) {
+        long sboxed_value = 0;
+        for (int j=0; j<8; j++){
+            long first_byte = xored_text >>> (48 - (j * 6) - 1) & 1L;
+            long sixth_byte = xored_text >> (48 - (j * 6) - 6) & 1L;
+            long four_middle_bytes = xored_text >>> (48 - (j * 6) - 5) & 15L;
+
+            long row_bytes_sbox = (first_byte << 1) | sixth_byte ;
+            long column_bytes_sbox = four_middle_bytes;
+
+            long value = DesConstants.s_box[j][(int)column_bytes_sbox][(int)row_bytes_sbox];
+
+            sboxed_value <<= 4;
+            sboxed_value |= value;
+
+        }
+        return sboxed_value;
+    }
+
     public long main_algorythm(long plain_text) {
         SecureRandom sr = new SecureRandom();
         long key_64 = sr.nextLong();
@@ -82,15 +101,10 @@ public class DesAlgorithm {
 
             long text_after_xor = xor(expanded_right_text_48, transformed_keys_48[i]);
 
-            for (int j=0; j<8; j++){
-                long first_byte = (text_after_xor >>> (48 - (j*6) - 1)) & 1L;
-                long sixth_byte = text_after_xor << (48 - (j*6) - 5) & 1L;
+            long sboxed_text = s_boxed_values(text_after_xor);
 
-
-
-            }
+            long pboxed_text = permute(sboxed_text, DesConstants.p_box_permutation, 32);
         }
         return ciphered_text;
     }
 }
-
