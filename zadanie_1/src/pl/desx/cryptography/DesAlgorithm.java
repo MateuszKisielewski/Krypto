@@ -1,5 +1,7 @@
 package pl.desx.cryptography;
 
+import java.security.SecureRandom;
+
 public class DesAlgorithm {
 
     public long permute(long input_plain_text, byte[] table_bytes, int important_bytes){
@@ -23,6 +25,7 @@ public class DesAlgorithm {
     public long XOR(long LPT, long fourSteppedRPT){
         return LPT ^ fourSteppedRPT; //po prostu xor z LPT i z tego RPT po tych 4 krokach
     }
+
     public long[] generate_sub_keys(long key_64) {
         long[] sub_keys = new long[16];
 
@@ -62,5 +65,17 @@ public class DesAlgorithm {
         return sub_keys;
     }
 
+    public long main_algorythm(long plain_text) {
+        long after_IP = permute(plain_text, DesConstants.initial_permutation, 64);
+        for (int i=0; i<16; i++){
+            long[] parts = split_LPT_RPT(after_IP);
+            long LPT = parts[0];
+            long RPT = parts[1];
 
+            SecureRandom sr = new SecureRandom();
+            long key = sr.nextLong();
+            long[] transformed_keys = generate_sub_keys(key);
+            long expanded_text = permute(RPT, DesConstants.expansion_permutation, 32)
+        }
+    }
 }
