@@ -1,4 +1,4 @@
-package main.java.pl.desx.cryptography;
+package pl.desx.cryptography;
 
 import java.security.SecureRandom;
 

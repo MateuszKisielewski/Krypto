@@ -1,4 +1,4 @@
-package main.java.pl.desx.files;
+package pl.desx.files;
 
 public class FileManager {
 }
