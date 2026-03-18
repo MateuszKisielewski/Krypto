@@ -22,8 +22,8 @@ public class DesAlgorithm {
         return LPT_RPT; //zwracamy tablicę w której mamy lewą i prawą część osobno
     }
 
-    public long XOR(long LPT, long fourSteppedRPT){
-        return LPT ^ fourSteppedRPT; //po prostu xor z LPT i z tego RPT po tych 4 krokach
+    public long xor(long left, long right){
+        return left ^ right;
     }
 
     public long[] generate_sub_keys(long key_64) {
@@ -66,16 +66,31 @@ public class DesAlgorithm {
     }
 
     public long main_algorythm(long plain_text) {
+        SecureRandom sr = new SecureRandom();
+        long key_64 = sr.nextLong();
+
+        long ciphered_text = 0;
+
         long after_IP = permute(plain_text, DesConstants.initial_permutation, 64);
         for (int i=0; i<16; i++){
             long[] parts = split_LPT_RPT(after_IP);
             long LPT = parts[0];
             long RPT = parts[1];
 
-            SecureRandom sr = new SecureRandom();
-            long key_64 = sr.nextLong();
-            long[] transformed_keys_48 = generate_sub_keys(key);
-            long expanded_text_48 = permute(RPT, DesConstants.expansion_permutation, 32)
+            long[] transformed_keys_48 = generate_sub_keys(key_64);
+            long expanded_right_text_48 = permute(RPT, DesConstants.expansion_permutation, 32);
+
+            long text_after_xor = xor(expanded_right_text_48, transformed_keys_48[i]);
+
+            for (int j=0; j<8; j++){
+                long first_byte = (text_after_xor >>> (48 - (j*6) - 1)) & 1L;
+                long sixth_byte = text_after_xor << (48 - (j*6) - 5) & 1L;
+
+
+
+            }
         }
+        return ciphered_text;
     }
 }
+
