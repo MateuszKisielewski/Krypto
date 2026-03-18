@@ -39,7 +39,7 @@ public class DesAlgorithmTest {
         long key = 0x133457799BBCDFF1L;
         long expectedCipherText = 0x85E813540F0AB405L;
 
-        long actualCipherText = des.main_algorythm(plainText, key);
+        long actualCipherText = des.main_encryption_algorithm(plainText, key);
 
         assertEquals(expectedCipherText, actualCipherText,
                 String.format("Błąd DES! Oczekiwano: %X, Otrzymano: %X", expectedCipherText, actualCipherText));
