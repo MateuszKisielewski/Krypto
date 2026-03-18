@@ -96,6 +96,8 @@ public class DesAlgorithm {
         long ciphered_text = 0;
 
         long after_IP = permute(plain_text, DesConstants.initial_permutation, 64);
+        long swapped_output = 0;
+
         for (int i=0; i<16; i++){
             long[] parts = split_LPT_RPT(after_IP);
             long LPT = parts[0];
@@ -109,7 +111,17 @@ public class DesAlgorithm {
             long sboxed_text = s_boxed_values(text_after_xor);
 
             long pboxed_text = permute(sboxed_text, DesConstants.p_box_permutation, 32);
+
+            long xored_text = xor(LPT, pboxed_text);
+
+            long temp = RPT;
+            RPT = xored_text;
+            LPT = temp;
+
+            swapped_output = (LPT << 32) | RPT;
         }
+        ciphered_text = permute(swapped_output, DesConstants.final_permutation, 64);
+
         return ciphered_text;
     }
 }
