@@ -15,6 +15,25 @@ public class DesxAlgorithm {
         this.key_3 = sr.nextLong();
     }
 
+    public long get_key_1() {
+        return key_1;
+    }
+
+    public long get_key_2() {
+        return key_2;
+    }
+
+    public long get_key_3() {
+        return key_3;
+    }
+
+    public void set_keys(long k1, long k2, long k3) {
+        this.key_1 = k1;
+        this.key_2 = k2;
+        this.key_3 = k3;
+    }
+
+
     public long main_desx_block_encrypt(long plain_text) {
         DesAlgorithm des = new DesAlgorithm();
         long first_xor = key_1 ^ plain_text;
