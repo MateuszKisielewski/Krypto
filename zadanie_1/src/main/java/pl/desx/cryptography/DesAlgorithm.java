@@ -68,7 +68,7 @@ public class DesAlgorithm {
         return sub_keys;
     }
 
-    public long s_boxed_values(long xored_text) {
+    public long s_box(long xored_text) {
         long sboxed_value = 0;
         for (int j=0; j<8; j++){
             long first_byte = xored_text >>> (48 - (j * 6) - 1) & 1L;
@@ -102,7 +102,7 @@ public class DesAlgorithm {
 
             long text_after_xor = xor(expanded_right_text_48, transformed_keys_48[i]);
 
-            long sboxed_text = s_boxed_values(text_after_xor);
+            long sboxed_text = s_box(text_after_xor);
 
             long pboxed_text = permute(sboxed_text, DesConstants.p_box_permutation, 32);
 
@@ -134,7 +134,7 @@ public class DesAlgorithm {
 
             long text_after_xor = xor(expanded_right_text_48, transformed_keys_48[15-i]);
 
-            long sboxed_text = s_boxed_values(text_after_xor);
+            long sboxed_text = s_box(text_after_xor);
 
             long pboxed_text = permute(sboxed_text, DesConstants.p_box_permutation, 32);
 
