@@ -48,7 +48,7 @@ public class FileManager {
     }
 
     public String build_key_path(String input_path) {
-        Path p = Paths.get(input_path);
+        Path p = Paths.get(input_path).toAbsolutePath();
         String name = p.getFileName().toString();
         int dot = name.lastIndexOf('.');
         String base_name = (dot != -1) ? name.substring(0, dot) : name;

@@ -26,4 +26,10 @@ public class BlockCutter {
         int padding = data[data.length - 1];
         return Arrays.copyOf(data, data.length - padding);
     }
+
+    public byte[] to_bytes(long[] blocks) {
+        ByteBuffer buffer = ByteBuffer.allocate(blocks.length * 8);
+        for (long block : blocks) buffer.putLong(block);
+        return buffer.array();
+    }
 }
