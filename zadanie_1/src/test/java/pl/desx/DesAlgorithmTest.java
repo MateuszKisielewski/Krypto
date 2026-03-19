@@ -44,4 +44,15 @@ public class DesAlgorithmTest {
         assertEquals(expectedCipherText, actualCipherText,
                 String.format("Błąd DES! Oczekiwano: %X, Otrzymano: %X", expectedCipherText, actualCipherText));
     }
+
+    @Test
+    public void testMainAlgorithmDecryption() {
+        long cipheredText = 0x85E813540F0AB405L;
+        long key = 0x133457799BBCDFF1L;
+        long expectedPlainText = 0x0123456789ABCDEFL;
+
+        long actualPlainText = des.main_decryption_algorithm(cipheredText, key);
+
+        assertEquals(expectedPlainText, actualPlainText);
+    }
 }

@@ -122,7 +122,32 @@ public class DesAlgorithm {
     public long main_decryption_algorithm(long ciphered_text, long key_64) {
         long plain_text = 0;
 
+        long after_IP = permute(ciphered_text, DesConstants.initial_permutation, 64);
+        long[] parts = split_LPT_RPT(after_IP);
+        long LPT = parts[0];
+        long RPT = parts[1];
 
-        return 0;
+        long[] transformed_keys_48 = generate_sub_keys(key_64);
+
+        for (int i=0; i<16; i++){
+            long expanded_right_text_48 = permute(RPT, DesConstants.expansion_permutation, 32);
+
+            long text_after_xor = xor(expanded_right_text_48, transformed_keys_48[15-i]);
+
+            long sboxed_text = s_boxed_values(text_after_xor);
+
+            long pboxed_text = permute(sboxed_text, DesConstants.p_box_permutation, 32);
+
+            long xored_text = xor(LPT, pboxed_text);
+
+            long temp = RPT;
+            RPT = xored_text;
+            LPT = temp;
+        }
+
+        long swapped_output = (RPT << 32) | LPT;
+        plain_text = permute(swapped_output, DesConstants.final_permutation, 64);
+
+        return plain_text;
     }
 }
