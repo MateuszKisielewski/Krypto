@@ -7,10 +7,15 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import pl.desx.cryptography.BlockCutter;
 import pl.desx.cryptography.DesAlgorithm;
 import pl.desx.cryptography.DesxAlgorithm;
+import pl.desx.files.FileManager;
 
 public class AppWindow {
+    BlockCutter blockCutter = new BlockCutter();
+    DesxAlgorithm desxAlgorithm = new DesxAlgorithm();
+    FileManager fileManager = new FileManager();
 
     @FXML
     private ToggleGroup choice;
@@ -56,18 +61,20 @@ public class AppWindow {
 
     @FXML
     void onGenerujKlucze(ActionEvent event) {
-        DesxAlgorithm desx = new DesxAlgorithm();
-        desx.generate_keys();
+        DesxAlgorithm des = new DesxAlgorithm();
+        des.generate_keys();
     }
 
     @FXML
     void onStart(ActionEvent event) {
-        DesxAlgorithm desx = new DesxAlgorithm();
-        if (choice.getSelectedToggle() == deszyfrujButton) {
-            desx.main_desx_block_decrypt(desx.);
+        if (deszyfrujButton.isSelected()) {
+
+            desxAlgorithm.main_desx_block_decrypt();
         }
-        else {
-            desx.main_desx_block_encrypt();
+
+        if (szyfrujButton.isSelected()) {
+            long[] keys = fileManager.load_key();
+            desxAlgorithm.main_desx_block_encrypt();
         }
     }
 
