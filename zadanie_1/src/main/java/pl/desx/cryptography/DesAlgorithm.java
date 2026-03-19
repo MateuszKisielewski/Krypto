@@ -87,7 +87,7 @@ public class DesAlgorithm {
         return sboxed_value;
     }
 
-    public long main_encrypt_algorithm(long plain_text, long key_64) {
+    public long main_des_block_encrypt(long plain_text, long key_64) {
         long ciphered_text = 0;
 
         long after_IP = permute(plain_text, DesConstants.initial_permutation, 64);
@@ -119,7 +119,7 @@ public class DesAlgorithm {
         return ciphered_text;
     }
 
-    public long main_decrypt_algorithm(long ciphered_text, long key_64) {
+    public long main_des_block_decrypt(long ciphered_text, long key_64) {
         long plain_text = 0;
 
         long after_IP = permute(ciphered_text, DesConstants.initial_permutation, 64);
