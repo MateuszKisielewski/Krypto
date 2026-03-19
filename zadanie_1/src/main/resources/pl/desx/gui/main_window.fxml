@@ -10,24 +10,26 @@
 
 <AnchorPane prefHeight="331.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.desx.gui.AppWindow">
     <children>
-        <Button layoutX="285.0" layoutY="281.0" mnemonicParsing="false" onAction="#onButtonClicked" text="Start" />
+        <Button fx:id="start" layoutX="285.0" layoutY="281.0" mnemonicParsing="false" onAction="#onStart" text="Start" />
       <TextFlow layoutX="14.0" layoutY="105.0" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <TextArea prefHeight="203.0" prefWidth="202.0" />
+            <TextArea id="tekstJawny" fx:id="tekstJawny" prefHeight="203.0" prefWidth="202.0" promptText="tekst jawny" />
          </children>
       </TextFlow>
-      <TextArea layoutX="386.0" layoutY="107.0" prefHeight="200.0" prefWidth="200.0" />
-      <TextField layoutX="14.0" layoutY="14.0" />
-      <Button layoutX="187.0" layoutY="15.0" mnemonicParsing="false" text="Generuj klucz" />
-      <Button layoutX="13.0" layoutY="75.0" mnemonicParsing="false" text="Wczytaj plik" />
-      <RadioButton layoutX="270.0" layoutY="207.0" mnemonicParsing="false" text="Szyfruj">
+      <TextArea id="tekstZaszyfrowany" fx:id="tekstZaszyfrowany" layoutX="386.0" layoutY="107.0" prefHeight="200.0" prefWidth="200.0" promptText="tekst zaszyfrowany" />
+      <TextField id="kluczPierwszy" fx:id="kluczPierwszy" layoutX="48.0" layoutY="14.0" promptText="klucz pierwszy" />
+      <Button fx:id="generujKlucze" layoutX="148.0" layoutY="47.0" mnemonicParsing="false" onAction="#onGenerujKlucze" text="Generuj klucze" />
+      <Button fx:id="wczytajPlik" layoutX="265.0" layoutY="130.0" mnemonicParsing="false" onAction="#onWczytajPlik" text="Wczytaj plik" />
+      <RadioButton fx:id="szyfrujButton" layoutX="270.0" layoutY="207.0" mnemonicParsing="false" text="Szyfruj">
          <toggleGroup>
             <ToggleGroup fx:id="choice" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton layoutX="269.0" layoutY="239.0" mnemonicParsing="false" text="Deszyfruj" toggleGroup="$choice" />
-      <Button layoutX="511.0" layoutY="77.0" mnemonicParsing="false" text="Zapisz plik" />
-      <Button layoutX="289.0" layoutY="15.0" mnemonicParsing="false" text="Zapisz klucz" />
-      <Button layoutX="386.0" layoutY="15.0" mnemonicParsing="false" text="Wczytaj klucz" />
+      <RadioButton fx:id="deszyfrujButton" layoutX="269.0" layoutY="239.0" mnemonicParsing="false" text="Deszyfruj" toggleGroup="$choice" />
+      <Button fx:id="zapiszPlik" layoutX="269.0" layoutY="166.0" mnemonicParsing="false" onAction="#onZapiszPlik" text="Zapisz plik" />
+      <Button fx:id="zapiszKlucze" layoutX="261.0" layoutY="47.0" mnemonicParsing="false" onAction="#onZapiszKlucze" text="Zapisz klucze" />
+      <Button fx:id="wczytajKlucze" layoutX="370.0" layoutY="47.0" mnemonicParsing="false" onAction="#onWczytajKlucze" text="Wczytaj klucze" />
+      <TextField id="kluczDrugi" fx:id="kluczDrugi" layoutX="227.0" layoutY="14.0" promptText="klucz drugi" />
+      <TextField id="kluczTrzeci" fx:id="kluczTrzeci" layoutX="406.0" layoutY="14.0" promptText="klucz trzeci" />
     </children>
 </AnchorPane>
