@@ -56,13 +56,19 @@ public class AppWindow {
 
     @FXML
     void onGenerujKlucze(ActionEvent event) {
-        DesxAlgorithm des = new DesxAlgorithm();
-        des.generate_keys();
+        DesxAlgorithm desx = new DesxAlgorithm();
+        desx.generate_keys();
     }
 
     @FXML
     void onStart(ActionEvent event) {
-
+        DesxAlgorithm desx = new DesxAlgorithm();
+        if (choice.getSelectedToggle() == deszyfrujButton) {
+            desx.main_desx_block_decrypt(desx.);
+        }
+        else {
+            desx.main_desx_block_encrypt();
+        }
     }
 
     @FXML
