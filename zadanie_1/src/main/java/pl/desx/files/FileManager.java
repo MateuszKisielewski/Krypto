@@ -28,7 +28,7 @@ public class FileManager {
         byte[] data = Files.readAllBytes(Paths.get(path));
 
         if (data.length != 24) {
-            throw new IOException("Nieprawidłowy plik klucza! Oczekiwano 24 bajtów, otrzymano: " + data.length);
+            throw new IOException("Zły plik, klucz powinien mieć 24 bity a miał: " + data.length);
         }
 
         ByteBuffer buffer = ByteBuffer.wrap(data);

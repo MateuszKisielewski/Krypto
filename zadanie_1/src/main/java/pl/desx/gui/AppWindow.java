@@ -126,7 +126,6 @@ public class AppWindow {
                         desxAlgorithm.get_key_1(),
                         desxAlgorithm.get_key_2(),
                         desxAlgorithm.get_key_3());
-            show_alert("Klucz zapisano: " + file.getAbsolutePath());
         }
     }
 
@@ -154,7 +153,6 @@ public class AppWindow {
 
         if (file != null) {
             fileManager.write_file(file.getAbsolutePath(), last_result_bytes);
-            show_alert("Zapisano plik" + file.getAbsolutePath());
         }
     }
 
