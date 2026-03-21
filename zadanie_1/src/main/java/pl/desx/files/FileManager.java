@@ -2,6 +2,7 @@ package pl.desx.files;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -53,5 +54,13 @@ public class FileManager {
         int dot = name.lastIndexOf('.');
         String base_name = (dot != -1) ? name.substring(0, dot) : name;
         return p.getParent().resolve(base_name + ".key").toString();
+    }
+
+    public byte[] string_to_bytes(String str) {
+        return str.getBytes(StandardCharsets.UTF_8);
+    }
+
+    public String bytes_to_string(byte[] bytes) {
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 }
