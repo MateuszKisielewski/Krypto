@@ -12,6 +12,7 @@ import pl.desx.files.FileManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.function.UnaryOperator;
 
 public class AppWindow {
     BlockCutter blockCutter = new BlockCutter();
@@ -19,6 +20,15 @@ public class AppWindow {
     FileManager fileManager = new FileManager();
     String input_file_path = null;
     byte[] last_result_bytes;
+
+    @FXML
+    private ToggleGroup wprowadzanie;
+
+    @FXML
+    private RadioButton in_reczne;
+
+    @FXML
+    private RadioButton in_plik;
 
     @FXML
     private ToggleGroup choice;
@@ -63,11 +73,25 @@ public class AppWindow {
     private Button zapiszPlik;
 
     @FXML
+    public void initialize(){
+        UnaryOperator<TextFormatter.Change> input_filter = change -> {
+            String new_text = change.getControlNewText();
+            if (new_text.matches("[0-9a-fA-F]{0,16}"))
+                return change;
+            else
+                return null;
+        };
+        kluczPierwszy.setTextFormatter(new TextFormatter<>(input_filter));
+        kluczDrugi.setTextFormatter(new TextFormatter<>(input_filter));
+        kluczTrzeci.setTextFormatter(new TextFormatter<>(input_filter));
+    }
+
+    @FXML
     void onGenerujKlucze(ActionEvent event) {
         desxAlgorithm.generate_keys();
-        kluczPierwszy.setText(Long.toBinaryString(desxAlgorithm.get_key_1()));
-        kluczDrugi.setText(Long.toBinaryString(desxAlgorithm.get_key_2()));
-        kluczTrzeci.setText(Long.toBinaryString(desxAlgorithm.get_key_3()));
+        kluczPierwszy.setText(Long.toHexString(desxAlgorithm.get_key_1()));
+        kluczDrugi.setText(Long.toHexString(desxAlgorithm.get_key_2()));
+        kluczTrzeci.setText(Long.toHexString(desxAlgorithm.get_key_3()));
     }
 
     @FXML
