@@ -44,18 +44,6 @@ public class FileManager {
         return Files.exists(Paths.get(path));
     }
 
-    public String build_output_path(String input_path, boolean encrypting) {
-        return input_path + (encrypting ? ".enc" : ".dec");
-    }
-
-    public String build_key_path(String input_path) {
-        Path p = Paths.get(input_path).toAbsolutePath();
-        String name = p.getFileName().toString();
-        int dot = name.lastIndexOf('.');
-        String base_name = (dot != -1) ? name.substring(0, dot) : name;
-        return p.getParent().resolve(base_name + ".key").toString();
-    }
-
     public byte[] string_to_bytes(String str) {
         return str.getBytes(StandardCharsets.UTF_8);
     }
