@@ -31,11 +31,11 @@
       <Button fx:id="wczytajKlucze" layoutX="370.0" layoutY="47.0" mnemonicParsing="false" onAction="#onWczytajKlucze" text="Wczytaj klucze" />
       <TextField id="kluczDrugi" fx:id="kluczDrugi" layoutX="227.0" layoutY="14.0" promptText="klucz drugi" />
       <TextField id="kluczTrzeci" fx:id="kluczTrzeci" layoutX="406.0" layoutY="14.0" promptText="klucz trzeci" />
-      <RadioButton layoutX="53.0" layoutY="97.0" mnemonicParsing="false" text="Wprowadzanie ręczne">
+      <RadioButton layoutX="53.0" layoutY="150.0" mnemonicParsing="false" text="Wprowadzanie ręczne">
          <toggleGroup>
             <ToggleGroup fx:id="wprowadzanie" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton layoutX="394.0" layoutY="97.0" mnemonicParsing="false" text="Wprowadzanie z pliku" toggleGroup="$wprowadzanie" />
+      <RadioButton layoutX="53.0" layoutY="171.0" mnemonicParsing="false" text="Wprowadzanie z pliku" toggleGroup="$wprowadzanie" />
     </children>
 </AnchorPane>
