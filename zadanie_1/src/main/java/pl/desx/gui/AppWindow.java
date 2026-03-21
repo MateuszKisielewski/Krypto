@@ -19,7 +19,7 @@ public class AppWindow {
     DesxAlgorithm desxAlgorithm = new DesxAlgorithm();
     FileManager fileManager = new FileManager();
     String input_file_path = null;
-    byte[] last_result_bytes;
+    byte[] proceeded_bytes;
 
     @FXML
     private ToggleGroup wprowadzanie;
@@ -96,27 +96,40 @@ public class AppWindow {
 
     @FXML
     void onStart(ActionEvent event) throws IOException {
-        byte[] data = fileManager.read_file(input_file_path);
-        long[] blocks = blockCutter.to_blocks(data);
-        long[] result = new long[blocks.length];
+        byte[] data;
+
+        if (in_reczne.isSelected()) {
+            data = fileManager.string_to_bytes(tekstJawny.getText());
+        }
+        else {
+            if (input_file_path == null || !fileManager.file_exists(input_file_path)) {
+                show_alert("Nie wybrano pliku");
+                return;
+            }
+            data = fileManager.read_file(input_file_path);
+        }
 
         if (szyfrujButton.isSelected()) {
+            long[] blocks = blockCutter.bytes_to_blocks_with_padding(data);
+            long[] result = new long[blocks.length];
             for (int i = 0; i < blocks.length; i++) {
                 result[i] = desxAlgorithm.main_desx_block_encrypt(blocks[i]);
-                last_result_bytes = blockCutter.from_blocks(result);
             }
+            proceeded_bytes = blockCutter.to_bytes(result);
         }
         else if (deszyfrujButton.isSelected()) {
+            long[] blocks = blockCutter.bytes_to_blocks_without_padding(data);
+            long[] result = new long[blocks.length];
             for (int i = 0; i < blocks.length; i++) {
                 result[i] = desxAlgorithm.main_desx_block_decrypt(blocks[i]);
-                last_result_bytes = blockCutter.from_blocks(result);
             }
+            proceeded_bytes = blockCutter.blocks_to_bytes(result);
         }
         else {
             show_alert("Nie wybrano opcji");
             return;
         }
-        tekstZaszyfrowany.setText(new String(last_result_bytes));
+        tekstZaszyfrowany.setText(fileManager.bytes_to_string(proceeded_bytes));
     }
 
     @FXML
@@ -129,9 +142,9 @@ public class AppWindow {
         if (file != null) {
             long[] key = fileManager.load_key(file.getAbsolutePath());
             desxAlgorithm.set_keys(key[0], key[1], key[2]);
-            kluczPierwszy.setText(Long.toBinaryString(key[0]));
-            kluczDrugi.setText(Long.toBinaryString(key[1]));
-            kluczTrzeci.setText(Long.toBinaryString(key[2]));
+            kluczPierwszy.setText(Long.toHexString(key[0]));
+            kluczDrugi.setText(Long.toHexString(key[1]));
+            kluczTrzeci.setText(Long.toHexString(key[2]));
         }
     }
 
@@ -140,9 +153,8 @@ public class AppWindow {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Zapisz plik klucza");
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki klucza", "*.key"));
-        if (input_file_path != null) {
-            chooser.setInitialFileName(new File(input_file_path).getName() + ".key");
-        }
+        chooser.setInitialFileName("data.key");
+
         File file = chooser.showSaveDialog(get_window(event));
 
         if (file != null) {
@@ -162,7 +174,7 @@ public class AppWindow {
         if (file != null) {
             input_file_path = file.getAbsolutePath();
             byte[] data = fileManager.read_file(input_file_path);
-            tekstJawny.setText(new String(data));
+            tekstJawny.setText(fileManager.bytes_to_string(data));
         }
     }
 
@@ -170,13 +182,17 @@ public class AppWindow {
     void onZapiszPlik(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Zapisz plik");
+
         if (input_file_path != null) {
             fileChooser.setInitialFileName(new File(input_file_path).getName() + ".enc");
+        } else {
+            fileChooser.setInitialFileName("data.enc");
         }
+
         File file = fileChooser.showSaveDialog(get_window(event));
 
         if (file != null) {
-            fileManager.write_file(file.getAbsolutePath(), last_result_bytes);
+            fileManager.write_file(file.getAbsolutePath(), proceeded_bytes);
         }
     }
 
