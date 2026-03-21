@@ -14,7 +14,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/pl/desx/gui/main_window.fxml")));
 
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 600, 450);
 
         primaryStage.setTitle("DESX");
         primaryStage.setScene(scene);
