@@ -22,10 +22,10 @@
       <Button fx:id="wczytajPlik" layoutX="394.0" layoutY="164.0" mnemonicParsing="false" onAction="#onWczytajPlik" text="Wczytaj plik" />
       <RadioButton fx:id="szyfrujButton" layoutX="270.0" layoutY="207.0" mnemonicParsing="false" text="Szyfruj">
          <toggleGroup>
-            <ToggleGroup fx:id="choice" />
+            <ToggleGroup fx:id="de_szyfr" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="deszyfrujButton" layoutX="269.0" layoutY="237.0" mnemonicParsing="false" text="Deszyfruj" toggleGroup="$choice" />
+      <RadioButton fx:id="deszyfrujButton" layoutX="269.0" layoutY="237.0" mnemonicParsing="false" text="Deszyfruj" toggleGroup="$de_szyfr" />
       <Button fx:id="zapiszPlik" layoutX="394.0" layoutY="127.0" mnemonicParsing="false" onAction="#onZapiszPlik" text="Zapisz plik" />
       <Button fx:id="zapiszKlucze" layoutX="261.0" layoutY="47.0" mnemonicParsing="false" onAction="#onZapiszKlucze" text="Zapisz klucze" />
       <Button fx:id="wczytajKlucze" layoutX="370.0" layoutY="47.0" mnemonicParsing="false" onAction="#onWczytajKlucze" text="Wczytaj klucze" />

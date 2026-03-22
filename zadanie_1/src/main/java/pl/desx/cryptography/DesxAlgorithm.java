@@ -33,7 +33,6 @@ public class DesxAlgorithm {
         this.key_3 = k3;
     }
 
-
     public long main_desx_block_encrypt(long plain_text) {
         DesAlgorithm des = new DesAlgorithm();
         long first_xor = key_1 ^ plain_text;

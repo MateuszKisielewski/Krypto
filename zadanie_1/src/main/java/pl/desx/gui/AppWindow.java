@@ -6,7 +6,6 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import pl.desx.cryptography.BlockCutter;
-import pl.desx.cryptography.DesAlgorithm;
 import pl.desx.cryptography.DesxAlgorithm;
 import pl.desx.files.FileManager;
 
@@ -28,16 +27,7 @@ public class AppWindow {
     private RadioButton in_reczne;
 
     @FXML
-    private RadioButton in_plik;
-
-    @FXML
-    private ToggleGroup choice;
-
-    @FXML
     private RadioButton deszyfrujButton;
-
-    @FXML
-    private Button generujKlucze;
 
     @FXML
     private TextField kluczDrugi;
@@ -49,9 +39,6 @@ public class AppWindow {
     private TextField kluczTrzeci;
 
     @FXML
-    private Button start;
-
-    @FXML
     private RadioButton szyfrujButton;
 
     @FXML
@@ -61,16 +48,7 @@ public class AppWindow {
     private TextArea tekstZaszyfrowany;
 
     @FXML
-    private Button wczytajKlucze;
-
-    @FXML
     private Button wczytajPlik;
-
-    @FXML
-    private Button zapiszKlucze;
-
-    @FXML
-    private Button zapiszPlik;
 
     @FXML
     public void initialize(){
@@ -84,30 +62,78 @@ public class AppWindow {
         kluczPierwszy.setTextFormatter(new TextFormatter<>(input_filter));
         kluczDrugi.setTextFormatter(new TextFormatter<>(input_filter));
         kluczTrzeci.setTextFormatter(new TextFormatter<>(input_filter));
+
+        tekstJawny.editableProperty().bind(in_reczne.selectedProperty());
+        wczytajPlik.disableProperty().bind(in_reczne.selectedProperty());
+    }
+
+    private String format_hex_key(long key) {
+        String hex = Long.toHexString(key).toUpperCase();
+        while (hex.length() < 16) {
+            hex = "0" + hex;
+        }
+        return hex;
     }
 
     @FXML
     void onGenerujKlucze(ActionEvent event) {
         desxAlgorithm.generate_keys();
-        kluczPierwszy.setText(Long.toHexString(desxAlgorithm.get_key_1()));
-        kluczDrugi.setText(Long.toHexString(desxAlgorithm.get_key_2()));
-        kluczTrzeci.setText(Long.toHexString(desxAlgorithm.get_key_3()));
+        kluczPierwszy.setText(format_hex_key(desxAlgorithm.get_key_1()));
+        kluczDrugi.setText(format_hex_key(desxAlgorithm.get_key_2()));
+        kluczTrzeci.setText(format_hex_key(desxAlgorithm.get_key_3()));
     }
 
     @FXML
     void onStart(ActionEvent event) throws IOException {
         byte[] data;
 
-        if (in_reczne.isSelected()) {
-            data = fileManager.string_to_bytes(tekstJawny.getText());
+        if (wprowadzanie.getSelectedToggle() == null) {
+            show_alert("Nie wybrano żadnej z opcji wyboru tekstu do szyfrowania");
+            return;
         }
-        else {
-            if (input_file_path == null || !fileManager.file_exists(input_file_path)) {
-                show_alert("Nie wybrano pliku");
+
+        String wybor_wprowadzania = ((RadioButton) wprowadzanie.getSelectedToggle()).getId();
+
+        switch (wybor_wprowadzania) {
+            case "in_reczne":
+                String wpisanyTekst = tekstJawny.getText();
+                if (wpisanyTekst == null || wpisanyTekst.isEmpty()) {
+                    show_alert("Wpisz tekst do zaszyfrowania!");
+                    return;
+                }
+                data = fileManager.string_to_bytes(wpisanyTekst);
+                break;
+
+            case "in_plik":
+                if (input_file_path == null || !fileManager.file_exists(input_file_path)) {
+                    show_alert("Nie wybrano pliku");
+                    return;
+                }
+                data = fileManager.read_file(input_file_path);
+                break;
+
+            default:
+                show_alert("Dokonaj wyboru typu wprowadzania danych");
                 return;
-            }
-            data = fileManager.read_file(input_file_path);
         }
+
+
+        String k1 = kluczPierwszy.getText();
+        String k2 = kluczDrugi.getText();
+        String k3 = kluczTrzeci.getText();
+
+        if (k1 == null || k1.length() != 16 ||
+                k2 == null || k2.length() != 16 ||
+                k3 == null || k3.length() != 16) {
+
+            show_alert("Nie wprowadzono poprawnie kluczy");
+            return;
+        }
+
+        long key1_long = Long.parseUnsignedLong(k1, 16);
+        long key2_long = Long.parseUnsignedLong(k2, 16);
+        long key3_long = Long.parseUnsignedLong(k3, 16);
+        desxAlgorithm.set_keys(key1_long, key2_long, key3_long);
 
         if (szyfrujButton.isSelected()) {
             long[] blocks = blockCutter.bytes_to_blocks_with_padding(data);
@@ -126,25 +152,26 @@ public class AppWindow {
             proceeded_bytes = blockCutter.blocks_to_bytes(result);
         }
         else {
-            show_alert("Nie wybrano opcji");
+            show_alert("Nie wybrano opcji Szyfruj / Deszyfruj");
             return;
         }
+
         tekstZaszyfrowany.setText(fileManager.bytes_to_string(proceeded_bytes));
     }
 
     @FXML
     void onWczytajKlucze(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Otwieranie pliku");
+        fileChooser.setTitle("Wybierz klucz");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki kluczy", "*.key"));
         File file = fileChooser.showOpenDialog(get_window(event));
 
         if (file != null) {
             long[] key = fileManager.load_key(file.getAbsolutePath());
             desxAlgorithm.set_keys(key[0], key[1], key[2]);
-            kluczPierwszy.setText(Long.toHexString(key[0]));
-            kluczDrugi.setText(Long.toHexString(key[1]));
-            kluczTrzeci.setText(Long.toHexString(key[2]));
+            kluczPierwszy.setText(format_hex_key(key[0]));
+            kluczDrugi.setText(format_hex_key(key[1]));
+            kluczTrzeci.setText(format_hex_key(key[2]));
         }
     }
 
@@ -153,7 +180,7 @@ public class AppWindow {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Zapisz plik klucza");
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki klucza", "*.key"));
-        chooser.setInitialFileName("data.key");
+        chooser.setInitialFileName("klucz.key");
 
         File file = chooser.showSaveDialog(get_window(event));
 
@@ -184,9 +211,23 @@ public class AppWindow {
         fileChooser.setTitle("Zapisz plik");
 
         if (input_file_path != null) {
-            fileChooser.setInitialFileName(new File(input_file_path).getName() + ".enc");
+            String original_name = new File(input_file_path).getName();
+
+            if (szyfrujButton.isSelected()) {
+                fileChooser.setInitialFileName(original_name + ".enc");
+
+            } else if (deszyfrujButton.isSelected()) {
+                if (original_name.endsWith(".enc")) {
+                    String nazwa_bez_enc = original_name.substring(0, original_name.length() - 4);
+                    fileChooser.setInitialFileName(nazwa_bez_enc);
+                }
+            }
         } else {
-            fileChooser.setInitialFileName("data.enc");
+            if (szyfrujButton.isSelected()) {
+                fileChooser.setInitialFileName("zaszyfrowana.enc");
+            } else {
+                fileChooser.setInitialFileName("odszyfrowana.txt");
+            }
         }
 
         File file = fileChooser.showSaveDialog(get_window(event));

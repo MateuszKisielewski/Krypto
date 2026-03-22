@@ -32,6 +32,11 @@ public class BlockCutter {
         }
         byte[] data = buffer.array();
         int padding = data[data.length - 1];
+
+        if (padding < 1 || padding > 8) {
+            return data;
+        }
+
         return Arrays.copyOf(data, data.length - padding);
     }
 

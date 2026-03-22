@@ -15,9 +15,9 @@ public class DesAlgorithm {
 
     public long[] split_LPT_RPT(long output_IP) {
         long[] LPT_RPT = new long[2];
-        LPT_RPT[0] = output_IP >>> 32; //Wywala te 32 bity z prawej
-        LPT_RPT[1] = (output_IP << 32) >>> 32; //Wywala te 32 bity z lewej i przesuwa spowrotem na prawo, lewa strona to same zera
-        return LPT_RPT; //zwracamy tablicę w której mamy lewą i prawą część osobno
+        LPT_RPT[0] = output_IP >>> 32;
+        LPT_RPT[1] = (output_IP << 32) >>> 32;
+        return LPT_RPT;
     }
 
     public long xor(long left, long right){
