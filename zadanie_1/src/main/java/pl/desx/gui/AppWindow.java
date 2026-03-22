@@ -27,6 +27,9 @@ public class AppWindow {
     private RadioButton in_reczne;
 
     @FXML
+    private RadioButton in_plik;
+
+    @FXML
     private RadioButton deszyfrujButton;
 
     @FXML
@@ -156,7 +159,17 @@ public class AppWindow {
             return;
         }
 
-        tekstZaszyfrowany.setText(fileManager.bytes_to_string(proceeded_bytes));
+        String operacja;
+        if (in_plik.isSelected()) {
+            if(szyfrujButton.isSelected())
+                operacja = "zaszyfrowany";
+            else {
+                operacja = "zdeszyfrowany";
+            }
+            tekstZaszyfrowany.setText("Plik został " + operacja + ". Możesz zapisać plik");
+        } else {
+            tekstZaszyfrowany.setText(fileManager.bytes_to_string(proceeded_bytes));
+        }
     }
 
     @FXML
@@ -200,8 +213,7 @@ public class AppWindow {
 
         if (file != null) {
             input_file_path = file.getAbsolutePath();
-            byte[] data = fileManager.read_file(input_file_path);
-            tekstJawny.setText(fileManager.bytes_to_string(data));
+            tekstJawny.setText("Wybrano plik:\n" + input_file_path);
         }
     }
 
