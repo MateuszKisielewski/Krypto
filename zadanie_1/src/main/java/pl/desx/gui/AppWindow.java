@@ -227,18 +227,24 @@ public class AppWindow {
 
             if (szyfrujButton.isSelected()) {
                 fileChooser.setInitialFileName(original_name + ".enc");
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki zaszyfrowane (.enc)", "*.enc"));
 
             } else if (deszyfrujButton.isSelected()) {
                 if (original_name.endsWith(".enc")) {
                     String nazwa_bez_enc = original_name.substring(0, original_name.length() - 4);
-                    fileChooser.setInitialFileName(nazwa_bez_enc);
+                    if (nazwa_bez_enc.equals("zaszyfrowana"))
+                        fileChooser.setInitialFileName("odszyfrowana");
+                    else
+                        fileChooser.setInitialFileName(nazwa_bez_enc);
                 }
             }
         } else {
             if (szyfrujButton.isSelected()) {
                 fileChooser.setInitialFileName("zaszyfrowana.enc");
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki zaszyfrowane(enc)", "*.enc"));
             } else {
                 fileChooser.setInitialFileName("odszyfrowana.txt");
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki odszyfrowane(txt)", "*.txt"));
             }
         }
 
