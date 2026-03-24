@@ -227,6 +227,12 @@ public class AppWindow {
 
     @FXML
     void onZapiszPlik(ActionEvent event) throws IOException {
+        String file_out = pole_z_wynikiem_algorytmu.getText();
+        if (file_out == null || file_out.isEmpty()) {
+            show_alert("Nie możesz zapisać pustego pliku");
+            return;
+        }
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Zapisz plik");
 
