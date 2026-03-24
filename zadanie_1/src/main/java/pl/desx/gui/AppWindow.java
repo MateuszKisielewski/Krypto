@@ -144,7 +144,7 @@ public class AppWindow {
             for (int i = 0; i < blocks.length; i++) {
                 result[i] = desxAlgorithm.main_desx_block_encrypt(blocks[i]);
             }
-            proceeded_bytes = blockCutter.to_bytes(result);
+            proceeded_bytes = blockCutter.blocks_to_bytes_without_padding(result);
         }
         else if (deszyfrujButton.isSelected()) {
             long[] blocks = blockCutter.bytes_to_blocks_without_padding(data);
@@ -152,7 +152,7 @@ public class AppWindow {
             for (int i = 0; i < blocks.length; i++) {
                 result[i] = desxAlgorithm.main_desx_block_decrypt(blocks[i]);
             }
-            proceeded_bytes = blockCutter.blocks_to_bytes(result);
+            proceeded_bytes = blockCutter.blocks_to_bytes_with_padding(result);
         }
         else {
             show_alert("Nie wybrano opcji Szyfruj / Deszyfruj");

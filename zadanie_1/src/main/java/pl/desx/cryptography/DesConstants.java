@@ -1,3 +1,8 @@
+/**
+ * Autorzy:
+ * Mateusz Kisielewski
+ * Krzysztof Kata
+ */
 package pl.desx.cryptography;
 
 public class DesConstants {
