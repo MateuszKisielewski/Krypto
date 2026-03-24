@@ -45,10 +45,10 @@ public class AppWindow {
     private RadioButton szyfrujButton;
 
     @FXML
-    private TextArea tekstJawny;
+    private TextArea tekst_do_przetworzenia;
 
     @FXML
-    private TextArea tekstZaszyfrowany;
+    private TextArea pole_z_wynikiem_algorytmu;
 
     @FXML
     private Button wczytajPlik;
@@ -66,7 +66,7 @@ public class AppWindow {
         kluczDrugi.setTextFormatter(new TextFormatter<>(input_filter));
         kluczTrzeci.setTextFormatter(new TextFormatter<>(input_filter));
 
-        tekstJawny.editableProperty().bind(in_reczne.selectedProperty());
+        tekst_do_przetworzenia.editableProperty().bind(in_reczne.selectedProperty());
         wczytajPlik.disableProperty().bind(in_reczne.selectedProperty());
     }
 
@@ -99,7 +99,7 @@ public class AppWindow {
 
         switch (wybor_wprowadzania) {
             case "in_reczne":
-                String wpisanyTekst = tekstJawny.getText();
+                String wpisanyTekst = tekst_do_przetworzenia.getText();
                 if (wpisanyTekst == null || wpisanyTekst.isEmpty()) {
                     show_alert("Wpisz tekst do zaszyfrowania!");
                     return;
@@ -166,9 +166,9 @@ public class AppWindow {
             else {
                 operacja = "zdeszyfrowany";
             }
-            tekstZaszyfrowany.setText("Plik został " + operacja + ". Możesz zapisać plik");
+            pole_z_wynikiem_algorytmu.setText("Plik został " + operacja + ". Możesz zapisać plik");
         } else {
-            tekstZaszyfrowany.setText(fileManager.bytes_to_string(proceeded_bytes));
+            pole_z_wynikiem_algorytmu.setText(fileManager.bytes_to_string(proceeded_bytes));
         }
     }
 
@@ -213,7 +213,7 @@ public class AppWindow {
 
         if (file != null) {
             input_file_path = file.getAbsolutePath();
-            tekstJawny.setText("Wybrano plik:\n" + input_file_path);
+            tekst_do_przetworzenia.setText("Wybrano plik:\n" + input_file_path);
         }
     }
 
