@@ -227,13 +227,8 @@ public class AppWindow {
             String original_name = new File(input_file_path).getName();
 
             if (szyfrujButton.isSelected()) {
-                if (original_name.endsWith(".enc")) {
-                    fileChooser.setInitialFileName(original_name);
-                }
-                else {
-                    fileChooser.setInitialFileName(original_name + ".enc");
-                }
-                    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki zaszyfrowane (.enc)", "*.enc"));
+                fileChooser.setInitialFileName(original_name);
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki zaszyfrowane (.enc)", "*.enc"));
 
             } else if (deszyfrujButton.isSelected()) {
                 if (original_name.endsWith(".enc")) {
