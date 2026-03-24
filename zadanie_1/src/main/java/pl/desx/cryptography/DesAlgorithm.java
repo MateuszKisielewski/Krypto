@@ -10,7 +10,7 @@ public class DesAlgorithm {
         for (int i=0; i<table_bytes.length; i++){
             output_permutate_text <<= 1;
             int bit_position = table_bytes[i];
-            long extracted_bit = (input_plain_text >>> (important_bytes - bit_position)) & 1L;
+            long extracted_bit = (input_plain_text >>> (important_bytes - bit_position)) & 1;
             output_permutate_text |= extracted_bit;
         }
         return output_permutate_text;
