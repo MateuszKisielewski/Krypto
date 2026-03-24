@@ -190,6 +190,7 @@ public class AppWindow {
 
     @FXML
     void onZapiszKlucze(ActionEvent event) throws IOException {
+
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Zapisz plik klucza");
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki klucza", "*.key"));
@@ -226,8 +227,13 @@ public class AppWindow {
             String original_name = new File(input_file_path).getName();
 
             if (szyfrujButton.isSelected()) {
-                fileChooser.setInitialFileName(original_name + ".enc");
-                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki zaszyfrowane (.enc)", "*.enc"));
+                if (original_name.endsWith(".enc")) {
+                    fileChooser.setInitialFileName(original_name);
+                }
+                else {
+                    fileChooser.setInitialFileName(original_name + ".enc");
+                }
+                    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki zaszyfrowane (.enc)", "*.enc"));
 
             } else if (deszyfrujButton.isSelected()) {
                 if (original_name.endsWith(".enc")) {
