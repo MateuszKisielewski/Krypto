@@ -73,6 +73,8 @@ public class AppWindow {
     /**
      * Funkcja pomocnicza zapewniająca poprawne formatowanie kluczy
      * Zapobiega ucinaniu wiodących zer przez system operacyjny
+     * @param key Klucz w postaci 64-bitowej
+     * @return Sformatowany ciąg znaków (String) z wiodącymi zerami
      */
     private String format_hex_key(long key) {
         String hex = Long.toHexString(key).toUpperCase();
@@ -85,6 +87,7 @@ public class AppWindow {
     /**
      * Obsługuje zdarzenie kliknięcia przycisku generowania kluczy
      * Wywołuje metode z klasy DesxAlgorithm i uzupełnia pola tekstowe w GUI
+     * @param event Zdarzenie wygenerowane przez interfejs graficzny
      */
     @FXML
     void onGenerujKlucze(ActionEvent event) {
@@ -97,7 +100,9 @@ public class AppWindow {
     /**
      * Główna metoda przeprowadza walidację wprowadzania danych, weryfikację długości i poprawności kluczy
      * Uruchamia konkretne metody do szyfracji/deszyfracji
-     * Wyświetla poprawne dane w wyniku algorytmu
+     * Wyświetla poprawne dane jako wyniku algorytmu
+     * @param event Zdarzenie wygenerowane przez interfejs graficzny
+     * @throws IOException Jeśli wystąpi błąd podczas wczytywania pliku
      */
     @FXML
     void onStart(ActionEvent event) throws IOException {
@@ -186,6 +191,8 @@ public class AppWindow {
 
     /**
      * Obsługuje ładowanie kluczy szyfrujących z zewnętrznego pliku (.key)
+     * @param event Zdarzenie wygenerowane przez interfejs graficzny
+     * @throws IOException Jeśli wystąpi błąd podczas ładowania kluczy z pliku
      */
     @FXML
     void onWczytajKlucze(ActionEvent event) throws IOException {
@@ -205,6 +212,8 @@ public class AppWindow {
     /**
      * Obsługuje eksport aktualnie wprowadzonych kluczy do pliku (.key)
      * Posiada wbudowaną blokadę zapobiegającą zapisaniu pustych kluczy
+     * @param event Zdarzenie wygenerowane przez interfejs graficzny
+     * @throws IOException Jeśli wystąpi błąd podczas zapisu kluczy do pliku
      */
     @FXML
     void onZapiszKlucze(ActionEvent event) throws IOException {
@@ -233,6 +242,8 @@ public class AppWindow {
 
     /**
      * Wczytuje ścieżkę pliku przeznaczonego do modyfikacji przez algorytm
+     * @param event Zdarzenie wygenerowane przez interfejs graficzny
+     * @throws IOException Jeśli wystąpi błąd podczas otwierania okna wyboru pliku
      */
     @FXML
     void onWczytajPlik(ActionEvent event) throws IOException {
@@ -249,6 +260,8 @@ public class AppWindow {
     /**
      * Obsługuje zapis wyniku algorytmu
      * Automatycznie zarządza dodawaniem rozszerzenia ".enc" podczas szyfrowania i ucinania podczas deszyfracji
+     * @param event Zdarzenie wygenerowane przez interfejs graficzny
+     * @throws IOException Jeśli wystąpi błąd podczas zapisu pliku na dysk
      */
     @FXML
     void onZapiszPlik(ActionEvent event) throws IOException {
@@ -293,6 +306,8 @@ public class AppWindow {
 
     /**
      * Funkcja pomocnicza zwracająca główne okno aplikacji (niezbędne dla FileChooser)
+     * @param event Zdarzenie wygenerowane przez interfejs graficzny
+     * @return Obiekt typu Window reprezentujący bieżące okno aplikacji
      */
     private Window get_window(ActionEvent event) {
         return ((javafx.scene.Node) event.getSource()).getScene().getWindow();
@@ -300,6 +315,7 @@ public class AppWindow {
 
     /**
      * Funkcja pomocnicza wyświetlająca okna dialogowe
+     * @param message Treść komunikatu do wyświetlenia w oknie dialogowym
      */
     private void show_alert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

@@ -15,7 +15,8 @@ public class Main extends Application {
 
     /**
      * Wywoływana automatycznie po zainicjalizowaniu środowiska graficznego
-     * primaryStage Główne okno (Stage) dostarczone przez platformę JavaFX
+     * @param primaryStage Główne okno (Stage) dostarczone przez platformę JavaFX
+     * @throws Exception Jeśli wystąpi błąd podczas ładowania pliku widoku .fxml
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -31,6 +32,7 @@ public class Main extends Application {
     /**
      * W projekcie metoda ta jest wywoływana bezpiecznie przez klasę Launcher
      * Wywołuje wbudowaną metodę launch() która budzi do życia wątek graficzny (JavaFX)
+     * @param args Argumenty wiersza poleceń przekazane podczas uruchamiania programu
      */
     public static void main(String[] args) {
         launch(args);
