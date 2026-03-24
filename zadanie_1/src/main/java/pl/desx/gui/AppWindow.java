@@ -176,7 +176,6 @@ public class AppWindow {
     void onWczytajKlucze(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Wybierz klucz");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki kluczy", "*.key"));
         File file = fileChooser.showOpenDialog(get_window(event));
 
         if (file != null) {
@@ -190,10 +189,18 @@ public class AppWindow {
 
     @FXML
     void onZapiszKlucze(ActionEvent event) throws IOException {
+        String k1 = kluczPierwszy.getText();
+        String k2 = kluczDrugi.getText();
+        String k3 = kluczTrzeci.getText();
+
+        if (k1 == null || k1.isEmpty() || k2 == null || k2.isEmpty() || k3 == null || k3.isEmpty()) {
+
+            show_alert("Nie można zapisać pustych kluczy");
+            return;
+        }
 
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Zapisz plik klucza");
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki klucza", "*.key"));
         chooser.setInitialFileName("klucz.key");
 
         File file = chooser.showSaveDialog(get_window(event));
@@ -246,10 +253,8 @@ public class AppWindow {
         } else {
             if (szyfrujButton.isSelected()) {
                 fileChooser.setInitialFileName("zaszyfrowana.enc");
-                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki zaszyfrowane(enc)", "*.enc"));
             } else {
                 fileChooser.setInitialFileName("odszyfrowana.txt");
-                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki odszyfrowane(txt)", "*.txt"));
             }
         }
 
