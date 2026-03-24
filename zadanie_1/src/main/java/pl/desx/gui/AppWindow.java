@@ -1,3 +1,6 @@
+/**
+ * Autorzy: Krzysztof Kata (254776) i Mateusz Kisielewski (254779)
+ */
 package pl.desx.gui;
 
 import javafx.event.ActionEvent;
@@ -14,45 +17,41 @@ import java.io.IOException;
 import java.util.function.UnaryOperator;
 
 public class AppWindow {
+
+    /** Obiekt odpowiedzialny za cięcie danych na 64-bitowe bloki i obsługę paddingu */
     BlockCutter blockCutter = new BlockCutter();
+
+    /** Główny algorytm DESX */
     DesxAlgorithm desxAlgorithm = new DesxAlgorithm();
+
+    /** Menedżer operacji wejścia/wyjścia dla plików */
     FileManager fileManager = new FileManager();
+
+    /** Ścieżka do wczytanego pliku wejściowego */
     String input_file_path = null;
+
+    /** Bufor przechowujący wynik działania algorytmu */
     byte[] proceeded_bytes;
 
-    @FXML
-    private ToggleGroup wprowadzanie;
+    @FXML private ToggleGroup wprowadzanie;
+    @FXML private RadioButton in_reczne;
+    @FXML private RadioButton in_plik;
+    @FXML private RadioButton deszyfrujButton;
+    @FXML private RadioButton szyfrujButton;
 
-    @FXML
-    private RadioButton in_reczne;
+    @FXML private TextField kluczPierwszy;
+    @FXML private TextField kluczDrugi;
+    @FXML private TextField kluczTrzeci;
 
-    @FXML
-    private RadioButton in_plik;
+    @FXML private TextArea tekst_do_przetworzenia;
+    @FXML private TextArea pole_z_wynikiem_algorytmu;
+    @FXML private Button wczytajPlik;
 
-    @FXML
-    private RadioButton deszyfrujButton;
-
-    @FXML
-    private TextField kluczDrugi;
-
-    @FXML
-    private TextField kluczPierwszy;
-
-    @FXML
-    private TextField kluczTrzeci;
-
-    @FXML
-    private RadioButton szyfrujButton;
-
-    @FXML
-    private TextArea tekst_do_przetworzenia;
-
-    @FXML
-    private TextArea pole_z_wynikiem_algorytmu;
-
-    @FXML
-    private Button wczytajPlik;
-
+    /**
+     * Metoda wywoływana automatycznie podczas startu interfejsu JavaFX
+     * Inicjalizuje filtry które pozwalają na wpisanie wyłącznie do 16 znaków szesnastkowych dla kluczy
+     * Dodatkowo blokuje dane elementy w zależności od wyboru yżytkownika
+     */
     @FXML
     public void initialize(){
         UnaryOperator<TextFormatter.Change> input_filter = change -> {
@@ -62,6 +61,7 @@ public class AppWindow {
             else
                 return null;
         };
+
         kluczPierwszy.setTextFormatter(new TextFormatter<>(input_filter));
         kluczDrugi.setTextFormatter(new TextFormatter<>(input_filter));
         kluczTrzeci.setTextFormatter(new TextFormatter<>(input_filter));
@@ -70,6 +70,10 @@ public class AppWindow {
         wczytajPlik.disableProperty().bind(in_reczne.selectedProperty());
     }
 
+    /**
+     * Funkcja pomocnicza zapewniająca poprawne formatowanie kluczy
+     * Zapobiega ucinaniu wiodących zer przez system operacyjny
+     */
     private String format_hex_key(long key) {
         String hex = Long.toHexString(key).toUpperCase();
         while (hex.length() < 16) {
@@ -78,6 +82,10 @@ public class AppWindow {
         return hex;
     }
 
+    /**
+     * Obsługuje zdarzenie kliknięcia przycisku generowania kluczy
+     * Wywołuje metode z klasy DesxAlgorithm i uzupełnia pola tekstowe w GUI
+     */
     @FXML
     void onGenerujKlucze(ActionEvent event) {
         desxAlgorithm.generate_keys();
@@ -86,6 +94,11 @@ public class AppWindow {
         kluczTrzeci.setText(format_hex_key(desxAlgorithm.get_key_3()));
     }
 
+    /**
+     * Główna metoda przeprowadza walidację wprowadzania danych, weryfikację długości i poprawności kluczy
+     * Uruchamia konkretne metody do szyfracji/deszyfracji
+     * Wyświetla poprawne dane w wyniku algorytmu
+     */
     @FXML
     void onStart(ActionEvent event) throws IOException {
         byte[] data;
@@ -119,7 +132,6 @@ public class AppWindow {
                 show_alert("Dokonaj wyboru typu wprowadzania danych");
                 return;
         }
-
 
         String k1 = kluczPierwszy.getText();
         String k2 = kluczDrugi.getText();
@@ -172,6 +184,9 @@ public class AppWindow {
         }
     }
 
+    /**
+     * Obsługuje ładowanie kluczy szyfrujących z zewnętrznego pliku (.key)
+     */
     @FXML
     void onWczytajKlucze(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -187,6 +202,10 @@ public class AppWindow {
         }
     }
 
+    /**
+     * Obsługuje eksport aktualnie wprowadzonych kluczy do pliku (.key)
+     * Posiada wbudowaną blokadę zapobiegającą zapisaniu pustych kluczy
+     */
     @FXML
     void onZapiszKlucze(ActionEvent event) throws IOException {
         String k1 = kluczPierwszy.getText();
@@ -194,7 +213,6 @@ public class AppWindow {
         String k3 = kluczTrzeci.getText();
 
         if (k1 == null || k1.isEmpty() || k2 == null || k2.isEmpty() || k3 == null || k3.isEmpty()) {
-
             show_alert("Nie można zapisać pustych kluczy");
             return;
         }
@@ -207,12 +225,15 @@ public class AppWindow {
 
         if (file != null) {
             fileManager.save_key(file.getAbsolutePath(),
-                        desxAlgorithm.get_key_1(),
-                        desxAlgorithm.get_key_2(),
-                        desxAlgorithm.get_key_3());
+                    desxAlgorithm.get_key_1(),
+                    desxAlgorithm.get_key_2(),
+                    desxAlgorithm.get_key_3());
         }
     }
 
+    /**
+     * Wczytuje ścieżkę pliku przeznaczonego do modyfikacji przez algorytm
+     */
     @FXML
     void onWczytajPlik(ActionEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -225,6 +246,10 @@ public class AppWindow {
         }
     }
 
+    /**
+     * Obsługuje zapis wyniku algorytmu
+     * Automatycznie zarządza dodawaniem rozszerzenia ".enc" podczas szyfrowania i ucinania podczas deszyfracji
+     */
     @FXML
     void onZapiszPlik(ActionEvent event) throws IOException {
         String file_out = pole_z_wynikiem_algorytmu.getText();
@@ -266,10 +291,16 @@ public class AppWindow {
         }
     }
 
+    /**
+     * Funkcja pomocnicza zwracająca główne okno aplikacji (niezbędne dla FileChooser)
+     */
     private Window get_window(ActionEvent event) {
         return ((javafx.scene.Node) event.getSource()).getScene().getWindow();
     }
 
+    /**
+     * Funkcja pomocnicza wyświetlająca okna dialogowe
+     */
     private void show_alert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText(message);

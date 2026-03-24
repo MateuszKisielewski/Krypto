@@ -1,3 +1,6 @@
+/**
+ * Autorzy: Krzysztof Kata (254776) i Mateusz Kisielewski (254779)
+ */
 package pl.desx.cryptography;
 
 public class DesAlgorithm {
