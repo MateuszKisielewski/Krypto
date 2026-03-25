@@ -34,7 +34,7 @@ public class FileManager {
     /**
      * Zapisuje zestaw trzech kluczy DESX do pliku.
      * Wykorzystuje ByteBuffer do zamiany trzech 64-bitowych liczb (typ long) na 24-bajtową tablicę.
-     * * @param path Ścieżka docelowa pod którą zostanie zapisany plik .key
+     * @param path Ścieżka docelowa pod którą zostanie zapisany plik .key
      * @param k1 Pierwszy 64-bitowy klucz
      * @param k2 Drugi 64-bitowy klucz
      * @param k3 Trzeci 64-bitowy klucz
@@ -51,7 +51,7 @@ public class FileManager {
     /**
      * Wczytuje zestaw trzech kluczy DESX z pliku
      * Sprawdza, czy plik ma dokładnie 24 bajty (wymiar trzech kluczy 64-bitowych)
-     * * @param path Ścieżka do pliku z zapisanymi kluczami
+     * @param path Ścieżka do pliku z zapisanymi kluczami
      * @return Tablica trzech kluczy typu long.
      * @throws IOException Jeśli plik ma zły rozmiar lub wystąpi problem z jego odczytem
      */
@@ -72,7 +72,7 @@ public class FileManager {
 
     /**
      * Sprawdza, czy plik pod podaną ścieżką fizycznie istnieje na dysku; walidacja
-     * * @param path Ścieżka do sprawdzanego pliku
+     * @param path Ścieżka do sprawdzanego pliku
      * @return true, jeśli plik istnieje w przeciwnym razie false
      */
     public boolean file_exists(String path) {
@@ -92,7 +92,7 @@ public class FileManager {
     /**
      * Konwertuje bajty z algorytmu z powrotem na czytelny tekst
      * Wymusza kodowanie UTF-8
-     * * @param bytes Tablica zdeszyfrowanych bajtów
+     * @param bytes Tablica zdeszyfrowanych bajtów
      * @return Ciąg znaków w UTF-8
      */
     public String bytes_to_string(byte[] bytes) {
