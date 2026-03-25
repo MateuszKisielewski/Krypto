@@ -87,8 +87,8 @@ public class DesxAlgorithm {
      * drugi etap to deszyfrowanie poprzez odwrócenie algorytmu DES-a wykonane na wyniku pierwszego etapu
      * trzeci etap to XOR klucza pierwszego z wynikiem etapu drugiego
      *
-     * @param cipher_text
-     * @return
+     * @param cipher_text - podajemy tekst który został wcześniej zaszyfrowany
+     * @return - zwracamy zdeszyfrowany wynik algorytmu
      */
     public long main_desx_block_decrypt(long cipher_text) {
         DesAlgorithm des = new DesAlgorithm();
