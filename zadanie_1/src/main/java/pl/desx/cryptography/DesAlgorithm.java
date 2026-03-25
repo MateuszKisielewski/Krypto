@@ -11,15 +11,15 @@ public class DesAlgorithm {
      * Uniwersalna metoda wykonująca permutacje
      *
      * @param input_base_text - wartość której bitami operujemy
-     * @param table_bytes     - tablica mówiąca w jaki sposób przestawić bity którymi chcemy operować
+     * @param table_bits     - tablica mówiąca w jaki sposób przestawić bity którymi chcemy operować
      * @param important_bits - ilość znaczących bitów, inaczej: numer największego bitu (np. w 32-bitowej tablicy będzie to numer 32)
      * @return - zwracany jest wynik permutacji jako long
      */
-    public long permute(long input_base_text, byte[] table_bytes, int important_bits) {
+    public long permute(long input_base_text, byte[] table_bits, int important_bits) {
         long output_permutate_text = 0;
-        for (int i = 0; i < table_bytes.length; i++) {
+        for (int i = 0; i < table_bits.length; i++) {
             output_permutate_text <<= 1;
-            int bit_position = table_bytes[i];
+            int bit_position = table_bits[i];
             long extracted_bit = (input_base_text >>> (important_bits - bit_position)) & 1L;
             output_permutate_text |= extracted_bit;
         }
