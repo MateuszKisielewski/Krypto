@@ -3,9 +3,9 @@ package pl.rsa.cryptography;
 import java.math.BigInteger;
 
 public class RSAKey {
-    public BigInteger e;
-    public BigInteger d;
-    public BigInteger n;
+    private final BigInteger e;
+    private final BigInteger d;
+    private final BigInteger n;
 
     public RSAKey(BigInteger e, BigInteger d, BigInteger n) {
         this.e = e;
