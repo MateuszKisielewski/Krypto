@@ -16,8 +16,24 @@ public class BlindSignature {
 
         BigInteger rToPowerOFe = r.modPow(e, n);
 
-        BigInteger blindText = m.multiply(rToPowerOFe).mod(n);
+        BigInteger blindedText = m.multiply(rToPowerOFe).mod(n);
 
-        return new BigInteger[]{blindText, r};
+        return new BigInteger[]{blindedText, r};
+    }
+
+    BigInteger signBlindText (BigInteger blindedText, BigInteger d, BigInteger n){
+        return blindedText.modPow(d, n);
+    }
+
+    // zrób to Matuesz
+    BigInteger unblindSignedBlindedText (BigInteger signedBlindedText, BigInteger r, BigInteger n){
+        BigInteger signedText = null;
+        return signedText;
+    }
+
+    //Kisiel to do
+    boolean verifySignedText (BigInteger signedText, BigInteger m, BigInteger e, BigInteger n){
+
+        return true;
     }
 }
