@@ -25,15 +25,14 @@ public class BlindSignature {
         return blindedText.modPow(d, n);
     }
 
-    // zrób to Matuesz
     BigInteger unblindSignedBlindedText (BigInteger signedBlindedText, BigInteger r, BigInteger n){
-        BigInteger signedText = null;
+        BigInteger rInverse = r.modInverse(n);
+        BigInteger signedText = signedBlindedText.multiply(rInverse).mod(n);
         return signedText;
     }
 
-    //Kisiel to do
     boolean verifySignedText (BigInteger signedText, BigInteger m, BigInteger e, BigInteger n){
-
-        return true;
+        BigInteger decrypted = signedText.modPow(e, n);
+        return decrypted.equals(m);
     }
 }
