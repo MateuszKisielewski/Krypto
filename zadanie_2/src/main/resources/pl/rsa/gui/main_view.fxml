@@ -1,14 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="pl.rsa.gui.MainController"
-            prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane prefHeight="488.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.rsa.gui.MainController">
+   <children>
+      <TextArea layoutX="14.0" layoutY="227.0" prefHeight="247.0" prefWidth="202.0" />
+      <TextArea layoutX="568.0" layoutY="228.0" prefHeight="247.0" prefWidth="148.0" />
+      <RadioButton layoutX="49.0" layoutY="48.0" mnemonicParsing="false" text="Wprowadź tekst">
+         <toggleGroup>
+            <ToggleGroup fx:id="input_type" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton layoutX="49.0" layoutY="77.0" mnemonicParsing="false" text="Wprowadź z pliku" toggleGroup="$input_type" />
+      <RadioButton layoutX="439.0" layoutY="366.0" mnemonicParsing="false" text="Weryfikuj podpis">
+         <toggleGroup>
+            <ToggleGroup fx:id="szyfrujweryfukuj" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton layoutX="439.0" layoutY="334.0" mnemonicParsing="false" text="Szyfruj" toggleGroup="$szyfrujweryfukuj" />
+      <Button layoutX="469.0" layoutY="395.0" mnemonicParsing="false" text="Zapisz" />
+      <Button layoutX="95.0" layoutY="168.0" mnemonicParsing="false" text="Zakrywanie tekstu" />
+      <Button layoutX="246.0" layoutY="168.0" mnemonicParsing="false" text="Podpis serwera" />
+      <Button layoutX="380.0" layoutY="169.0" mnemonicParsing="false" text="Odkryj wiadomość" />
+      <Button layoutX="529.0" layoutY="169.0" mnemonicParsing="false" text="Zweryfikuj wiadomość" />
+      <Button layoutX="73.0" layoutY="106.0" mnemonicParsing="false" text="Wczytaj plik" />
+      <Button layoutX="505.0" layoutY="48.0" mnemonicParsing="false" text="Generuj klucze" />
+      <TextField layoutX="557.0" layoutY="14.0" promptText="Publiczny serwera" />
+      <TextField layoutX="389.0" layoutY="15.0" promptText="Prywatny serwera" />
+      <TextArea layoutX="219.0" layoutY="228.0" prefHeight="247.0" prefWidth="215.0" />
+   </children>
 </AnchorPane>
