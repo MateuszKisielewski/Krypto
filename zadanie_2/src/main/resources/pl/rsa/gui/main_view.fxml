@@ -7,10 +7,10 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="488.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.rsa.gui.MainController">
+<AnchorPane prefHeight="426.0" prefWidth="791.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.rsa.gui.MainController">
    <children>
       <TextArea id="textOryginalny" fx:id="textOryginalny" layoutX="14.0" layoutY="227.0" prefHeight="247.0" prefWidth="202.0" promptText="tekst oryginalny" />
-      <TextArea id="textKomunikaty" fx:id="textKomunikaty" layoutX="560.0" layoutY="182.0" prefHeight="293.0" prefWidth="157.0" promptText="komunikaty" />
+      <TextArea id="textKomunikaty" fx:id="textKomunikaty" layoutX="560.0" layoutY="182.0" prefHeight="287.0" prefWidth="209.0" promptText="komunikaty" />
       <RadioButton id="wprowadzTekstRadio" fx:id="wprowadzTekstRadio" layoutX="24.0" layoutY="24.0" mnemonicParsing="false" onAction="#onWprowadzTekstRadio" text="Wprowadź tekst">
          <toggleGroup>
             <ToggleGroup fx:id="input_type" />
