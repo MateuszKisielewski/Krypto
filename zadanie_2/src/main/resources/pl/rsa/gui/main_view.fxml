@@ -28,12 +28,13 @@
       <Button id="podpisButton" fx:id="podpisButton" layoutX="243.0" layoutY="130.0" mnemonicParsing="false" onAction="#onPodpis" text="Podpis serwera" />
       <Button id="odkryjButton" fx:id="odkryjButton" layoutX="377.0" layoutY="131.0" mnemonicParsing="false" onAction="#onOdkryj" text="Odkryj wiadomość" />
       <Button id="zweryfikujButton" fx:id="zweryfikujButton" layoutX="526.0" layoutY="131.0" mnemonicParsing="false" onAction="#onZweryfikuj" text="Zweryfikuj wiadomość" />
-      <Button id="wczytajTekstOryginalny" fx:id="wczytajButton" layoutX="76.0" layoutY="188.0" mnemonicParsing="false" onAction="#onWczytaj" text="Wczytaj plik" />
+      <Button id="wczytajTekstOryginalny" fx:id="wczytajOryginlanyTekstButton" layoutX="76.0" layoutY="188.0" mnemonicParsing="false" onAction="#onWczytaj" text="Wczytaj plik" />
       <Button id="generujButton" fx:id="generujButton" layoutX="583.0" layoutY="49.0" mnemonicParsing="false" onAction="#onGeneruj" text="Generuj klucze" />
       <TextField id="textPublicznyKlucza" fx:id="textPublicznyKlucza" layoutX="557.0" layoutY="14.0" promptText="Publiczny serwera" />
       <TextField id="textPrywatnyKlucz" fx:id="textPrywatnyKlucz" layoutX="389.0" layoutY="15.0" promptText="Prywatny serwera" />
       <TextArea id="textRobocza" fx:id="textRobocza" layoutX="230.0" layoutY="228.0" prefHeight="247.0" prefWidth="215.0" promptText="przestrzeń robocza" />
-      <Button id="wczytajTekstRoboczy" fx:id="wczytajButton1" layoutX="243.0" layoutY="188.0" mnemonicParsing="false" onAction="#onWczytaj" text="Wczytaj plik" />
-      <Button id="zapiszKluczButton" fx:id="zapiszButton1" layoutX="419.0" layoutY="49.0" mnemonicParsing="false" onAction="#onZapisz" text="Zapisz klucze" />
+      <Button id="wczytajTekstRoboczy" fx:id="wczytajRoboczyTekstButton" layoutX="243.0" layoutY="188.0" mnemonicParsing="false" onAction="#onWczytaj" text="Wczytaj plik" />
+      <Button id="zapiszKluczButton" fx:id="zapiszKluczeButton" layoutX="479.0" layoutY="49.0" mnemonicParsing="false" onAction="#onZapiszKlucze" text="Zapisz klucze" />
+      <Button id="wczytajKluczeButton" fx:id="wczytajKluczeButton" layoutX="377.0" layoutY="49.0" mnemonicParsing="false" onAction="#onWczytajKlucze" text="Wczytaj klucze" />
    </children>
 </AnchorPane>

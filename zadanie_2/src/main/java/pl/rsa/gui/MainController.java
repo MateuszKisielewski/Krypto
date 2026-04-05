@@ -4,12 +4,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.File;
 import java.math.BigInteger;
 
-// Zakładam, że Twoje klasy są w pakiecie pl.rsa.cryptography
 import pl.rsa.cryptography.BlindSignature;
 import pl.rsa.cryptography.HashUtils;
 import pl.rsa.cryptography.RSAKey;
@@ -18,271 +17,258 @@ import pl.rsa.files.FileManager;
 
 public class MainController {
 
-    @FXML private Button generujButton;
-    @FXML private Button odkryjButton;
-    @FXML private Button podpisButton;
-    @FXML private Button wczytajButton;
-    @FXML private Button zakrywanieButton;
-    @FXML private Button zapiszButton;
-    @FXML private Button zweryfikujButton;
-
-    @FXML private ToggleGroup input_type;
-    @FXML private ToggleGroup szyfrujweryfukuj;
-
-    @FXML private RadioButton szyfrujRadio;
-    @FXML private RadioButton weryfikujRadio;
-    @FXML private RadioButton wprowadzPlikRadio;
-    @FXML private RadioButton wprowadzTekstRadio;
-
-    @FXML private TextArea textKomunikaty;
     @FXML private TextArea textOryginalny;
+    @FXML private TextArea textKomunikaty;
     @FXML private TextArea textRobocza;
-
-    @FXML private TextField textPrywatnyKlucz;
     @FXML private TextField textPublicznyKlucza;
+    @FXML private TextField textPrywatnyKlucz;
+    @FXML private RadioButton wprowadzTekstRadio;
+    @FXML private RadioButton wprowadzPlikRadio;
+    @FXML private RadioButton weryfikujRadio;
+    @FXML private RadioButton szyfrujRadio;
+    @FXML private Button zakrywanieButton;
+    @FXML private Button podpisButton;
+    @FXML private Button odkryjButton;
+    @FXML private Button zweryfikujButton;
+    @FXML private Button generujButton;
+    @FXML private Button wczytajOryginlanyTekstButton;
+    @FXML private Button wczytajRoboczyTekstButton;
+    @FXML private Button zapiszButton;
+    @FXML private Button wczytajKluczeButton;
+    @FXML private Button zapiszKluczeButton;
 
-    // --- ZMIENNE PRZECHOWUJĄCE STAN APLIKACJI ---
-    private RSAKey rsaKey;               // Wygenerowane klucze
-    private byte[] fileData;             // Załadowane bajty z pliku
-    private BigInteger currentHash_m;    // Hash m
-    private BigInteger blindedMessage;   // m'
-    private BigInteger blindingFactor_r; // r
-    private BigInteger blindedSignature; // s'
-    private BigInteger finalSignature;   // s
+    private RSAKey rsaKey;
+    private BigInteger currentR;
+    private byte[] originalData;
+    private final BlindSignature blindSignature = new BlindSignature();
 
     @FXML
     public void initialize() {
-        // Ta metoda wykonuje się automatycznie po załadowaniu okna.
-        log("Witaj w programie! Wygeneruj klucze, aby rozpocząć.");
-
-        // Ustawiamy domyślny stan interfejsu (np. blokujemy przycisk wczytywania, bo wybrano tekst)
-        wczytajButton.setDisable(true);
-        textOryginalny.setDisable(false);
+        wprowadzTekstRadio.setSelected(true);
+        szyfrujRadio.setSelected(true);
+        onWprowadzTekstRadio(null);
+        onSzyfrujRadio(null);
+        textKomunikaty.setEditable(false);
     }
-
-    // --- METODY OBSŁUGI RADIO BUTTONÓW ---
 
     @FXML
     void onWprowadzTekstRadio(ActionEvent event) {
-        wczytajButton.setDisable(true);
         textOryginalny.setDisable(false);
-        fileData = null; // Czyścimy dane z pliku
-        log("Tryb wejścia: Wpisywanie ręczne tekstu.");
+        wczytajOryginlanyTekstButton.setDisable(true);
+        log("Trya: Wprowadzanie tekstu ręcznie");
     }
 
     @FXML
     void onWprowadzPlikRadio(ActionEvent event) {
-        wczytajButton.setDisable(false);
         textOryginalny.setDisable(true);
-        textOryginalny.clear();
-        log("Tryb wejścia: Wczytywanie z pliku.");
+        wczytajOryginlanyTekstButton.setDisable(false);
+        log("Tryb: Wprowadzanie z pliku");
     }
 
     @FXML
     void onSzyfrujRadio(ActionEvent event) {
-        log("Tryb operacji: Generowanie Ślepego Podpisu.");
         zakrywanieButton.setDisable(false);
         podpisButton.setDisable(false);
         odkryjButton.setDisable(false);
+        zweryfikujButton.setDisable(true);
+        log("Tryb: Ślepy podpis cyfrowy");
     }
 
     @FXML
     void onWeryfikujRadio(ActionEvent event) {
-        log("Tryb operacji: Weryfikacja. Wklej wygenerowany podpis do pola 'Tekst roboczy / Podpis'.");
         zakrywanieButton.setDisable(true);
         podpisButton.setDisable(true);
         odkryjButton.setDisable(true);
+        zweryfikujButton.setDisable(false);
+        log("Tryb: Weryfikacja podpisu");
     }
-
-    // --- METODY OBSŁUGI PRZYCISKÓW ---
 
     @FXML
     void onGeneruj(ActionEvent event) {
-        log("Generowanie kluczy 1024-bitowych. Proszę czekać...");
-        try {
-            RSAKeyGenerator generator = new RSAKeyGenerator();
-            rsaKey = generator.generateRSAKey(1024);
+        RSAKeyGenerator generator = new RSAKeyGenerator();
+        rsaKey = generator.generateRSAKey(2048);
 
-            // Wyświetlenie kluczy w polach tekstowych (w skróconej formie dla czytelności)
-            textPublicznyKlucza.setText("e: " + rsaKey.getE() + ", n: " + truncate(rsaKey.getN().toString()));
-            textPrywatnyKlucz.setText("d: " + truncate(rsaKey.getD().toString()));
-
-            log("Klucze wygenerowane pomyślnie!");
-        } catch (Exception e) {
-            log("Błąd generowania kluczy: " + e.getMessage());
-        }
+        textPublicznyKlucza.setText(rsaKey.getE().toString(16) + ":" + rsaKey.getN().toString(16));
+        textPrywatnyKlucz.setText(rsaKey.getD().toString(16) + ":" + rsaKey.getN().toString(16));
+        log("Wygenerowano nową parę kluczy RSA");
     }
 
     @FXML
-    void onWczytaj(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Wybierz plik");
-        File file = fileChooser.showOpenDialog(getStage());
-
-        if (file != null) {
-            try {
-                fileData = FileManager.readFile(file);
-                textOryginalny.setText("Załadowano plik: " + file.getName() + " (" + fileData.length + " bajtów)");
-                log("Wczytano plik: " + file.getName());
-            } catch (Exception e) {
-                log("Błąd wczytywania pliku: " + e.getMessage());
-            }
-        }
-    }
-
-    @FXML
-    void onZakrywanie(ActionEvent event) {
+    void onZakrywanie(ActionEvent event) throws Exception {
+        if (!updateOriginalData()) return;
         if (rsaKey == null) {
-            log("Najpierw wygeneruj klucze!"); return;
+            log("Błąd: Brak kluczy! Wygeneruj je lub wczytaj");
+            return;
         }
 
-        try {
-            byte[] dataToProcess = getInputData();
-            if (dataToProcess == null || dataToProcess.length == 0) {
-                log("Brak danych do zaślepienia!"); return;
-            }
+        BigInteger m = HashUtils.dataToHash(originalData);
+        BigInteger[] result = blindSignature.blindingText(m, rsaKey.getE(), rsaKey.getN());
+        currentR = result[1];
 
-            // Hashowanie
-            currentHash_m = HashUtils.dataToHash(dataToProcess);
-            log("1. Wyliczono hash z wiadomości: " + truncate(currentHash_m.toString()));
-
-            // Zaślepianie
-            BlindSignature blindSignatureClass = new BlindSignature();
-            BigInteger[] blinded = blindSignatureClass.blindingText(currentHash_m, rsaKey.getE(), rsaKey.getN());
-
-            blindedMessage = blinded[0];
-            blindingFactor_r = blinded[1];
-
-            textRobocza.setText(blindedMessage.toString());
-            log("2. Wiadomość pomyślnie zaślepiona (m').");
-
-        } catch (Exception e) {
-            log("Błąd podczas zaślepiania: " + e.getMessage());
-        }
+        textRobocza.setText(result[0].toString(16));
+        log("Zakończono zakrywanie tekstu");
     }
 
     @FXML
     void onPodpis(ActionEvent event) {
-        if (rsaKey == null || blindedMessage == null) {
-            log("Brak zaślepionej wiadomości do podpisania!"); return;
+        if (rsaKey == null || textRobocza.getText().isEmpty()) {
+            log("Błąd: Brak kluczy lub przestrzeń robocza jest pusta");
+            return;
         }
 
-        try {
-            BlindSignature blindSignatureClass = new BlindSignature();
-            blindedSignature = blindSignatureClass.signBlindText(blindedMessage, rsaKey.getD(), rsaKey.getN());
+        BigInteger blindedText = new BigInteger(textRobocza.getText().trim(), 16);
+        BigInteger signedBlindedText = blindSignature.signBlindText(blindedText, rsaKey.getD(), rsaKey.getN());
 
-            textRobocza.setText(blindedSignature.toString());
-            log("3. Serwer podpisał zaślepioną wiadomość (s').");
-
-        } catch (Exception e) {
-            log("Błąd podpisywania: " + e.getMessage());
-        }
+        textRobocza.setText(signedBlindedText.toString(16));
+        log("Wykonano ślepy podpis przez serwer");
     }
 
     @FXML
     void onOdkryj(ActionEvent event) {
-        if (rsaKey == null || blindedSignature == null || blindingFactor_r == null) {
-            log("Brak zaślepionego podpisu do odkrycia!"); return;
+        if (rsaKey == null || currentR == null || textRobocza.getText().isEmpty()) {
+            log("Błąd: Brakuje kluczy, czynnika 'r' lub przestrzeni roboczej");
+            return;
         }
 
-        try {
-            BlindSignature blindSignatureClass = new BlindSignature();
-            finalSignature = blindSignatureClass.unblindSignature(blindedSignature, blindingFactor_r, rsaKey.getN());
+        BigInteger signedBlindedText = new BigInteger(textRobocza.getText().trim(), 16);
+        BigInteger signedText = blindSignature.unblindSignedBlindedText(signedBlindedText, currentR, rsaKey.getN());
 
-            textRobocza.setText(finalSignature.toString());
-            log("4. Użytkownik zdjął zaślepienie. Otrzymano finalny podpis (s).");
+        textRobocza.setText(signedText.toString(16));
+        log("Odkryto wiadomość z podpisem");
+    }
 
-        } catch (Exception e) {
-            log("Błąd odkrywania podpisu: " + e.getMessage());
+    @FXML
+    void onZweryfikuj(ActionEvent event) throws Exception {
+        if (rsaKey == null || textRobocza.getText().isEmpty() || !updateOriginalData()) {
+            log("Błąd: Nie można zweryfikować (brak kluczy, danych lub podpisu)");
+            return;
+        }
+
+        BigInteger signedText = new BigInteger(textRobocza.getText().trim(), 16);
+        BigInteger m = HashUtils.dataToHash(originalData);
+
+        boolean isVerified = blindSignature.verifySignedText(signedText, m, rsaKey.getE(), rsaKey.getN());
+
+        if (isVerified) {
+            log("WYNIK: Weryfikacja POZYTYWNA!");
+        }
+        else {
+            log("WYNIK: Weryfikacja NEGATYWNA!");
         }
     }
 
     @FXML
-    void onZweryfikuj(ActionEvent event) {
-        if (rsaKey == null) {
-            log("Brak klucza publicznego (e, n) do weryfikacji!"); return;
-        }
+    void onWczytaj(ActionEvent event) throws Exception {
+        Button clickedBtn = (Button) event.getSource();
+        File file = showFileChooser(false);
+        if (file == null) return;
 
-        try {
-            // Pobieramy dane wejściowe
-            byte[] dataToProcess = getInputData();
-            if (dataToProcess == null || dataToProcess.length == 0) {
-                log("Brak oryginalnych danych do zweryfikowania!"); return;
-            }
-
-            // Pobieramy podpis z pola roboczego
-            String signatureText = textRobocza.getText().trim();
-            if (signatureText.isEmpty()) {
-                log("Podpisz tekst lub wklej istniejący podpis w pole robocze!"); return;
-            }
-
-            BigInteger signatureToVerify = new BigInteger(signatureText);
-            BigInteger originalHash = HashUtils.hashData(dataToProcess);
-
-            // Weryfikacja
-            BlindSignature blindSignatureClass = new BlindSignature();
-            boolean isValid = blindSignatureClass.verifySignature(signatureToVerify, originalHash, rsaKey.getE(), rsaKey.getN());
-
-            if (isValid) {
-                log(">>> [SUKCES] Podpis JEST PRAWIDŁOWY!");
-            } else {
-                log(">>> [BŁĄD] Podpis NIE JEST PRAWIDŁOWY!");
-            }
-
-        } catch (Exception e) {
-            log("Błąd podczas weryfikacji (zły format podpisu?): " + e.getMessage());
+        if (clickedBtn == wczytajOryginlanyTekstButton) {
+            originalData = FileManager.readFile(file);
+            textOryginalny.setText("wczytano plik " + file.getName());
+            log("Wczytano oryginalny plik: " + file.getName());
+        } else if (clickedBtn == wczytajRoboczyTekstButton) {
+            textRobocza.setText(FileManager.readTextFromFile(file).trim());
+            log("Wczytano do przestrzeni roboczej: " + file.getName());
         }
     }
 
     @FXML
-    void onZapisz(ActionEvent event) {
-        String textToSave = textRobocza.getText();
-        if (textToSave == null || textToSave.isEmpty()) {
-            log("Brak danych (podpisu) do zapisania!"); return;
+    void onZapisz(ActionEvent event) throws Exception {
+        File file = showFileChooser(true);
+        if (file == null) return;
+
+        FileManager.saveTextToFile(file, textRobocza.getText());
+        log("Zapisano przestrzeń roboczą do: " + file.getName());
+    }
+
+    @FXML
+    void onZapiszKlucze(ActionEvent event) throws Exception {
+        File file = showFileChooser(true);
+        if (file == null) return;
+
+        String pub = textPublicznyKlucza.getText();
+        String priv = textPrywatnyKlucz.getText();
+
+        if (pub.isEmpty() || priv.isEmpty()) {
+            log("Błąd: Brak kluczy do zapisania");
+            return;
         }
 
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Zapisz wynik");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Plik Tekstowy", "*.txt"));
-        File file = fileChooser.showSaveDialog(getStage());
+        String[] pubParts = pub.split(":");
+        String[] privParts = priv.split(":");
 
-        if (file != null) {
-            try {
-                FileManager.saveTextToFile(file, textToSave);
-                log("Pomyślnie zapisano do pliku: " + file.getName());
-            } catch (Exception e) {
-                log("Błąd podczas zapisywania: " + e.getMessage());
-            }
+        if (pubParts.length != 2 || privParts.length != 2) {
+            log("Błąd: Nieprawidłowy format kluczy w polach tekstowych");
+            return;
+        }
+
+        String e = pubParts[0];
+        String n = pubParts[1];
+        String d = privParts[0];
+
+        String klucze = "e:\n" + e + "\nd:\n" + d + "\nn:\n" + n;
+
+        FileManager.saveTextToFile(file, klucze);
+        log("Zapisano klucze do: " + file.getName());
+    }
+
+    @FXML
+    void onWczytajKlucze(ActionEvent event) throws Exception {
+        File file = showFileChooser(false);
+        if (file == null) return;
+
+        String keys = FileManager.readTextFromFile(file);
+        String[] lines = keys.split("\n");
+
+        if (lines.length >= 6) {
+            String eStr = lines[1].trim();
+            String dStr = lines[3].trim();
+            String nStr = lines[5].trim();
+
+            textPublicznyKlucza.setText(eStr + ":" + nStr);
+            textPrywatnyKlucz.setText(dStr + ":" + nStr);
+
+                BigInteger e = new BigInteger(eStr, 16);
+                BigInteger d = new BigInteger(dStr, 16);
+                BigInteger n = new BigInteger(nStr, 16);
+                rsaKey = new RSAKey(e, d, n);
+                log("Pomyślnie wczytano klucze z pliku: " + file.getName());
+        }
+        else {
+            log("Błąd: Nieprawidłowy format pliku z kluczami.");
         }
     }
 
-    // --- FUNKCJE POMOCNICZE ---
+    private boolean updateOriginalData() {
+        if (wprowadzTekstRadio.isSelected()) {
+            String text = textOryginalny.getText();
+            if (text == null || text.isEmpty()) {
+                log("Błąd: Pole tekstu oryginalnego jest puste");
+                return false;
+            }
+            originalData = text.getBytes();
+        } else {
+            if (originalData == null) {
+                log("Błąd: Najpierw wczytaj plik z danymi wejściowymi");
+                return false;
+            }
+        }
+        return true;
+    }
 
-    // Wypisywanie zdarzeń na konsole w GUI
     private void log(String message) {
         textKomunikaty.appendText(message + "\n");
     }
 
-    // Skracanie długich liczb BigInteger, by nie "rozsadziły" interfejsu
-    private String truncate(String text) {
-        if (text.length() > 30) {
-            return text.substring(0, 15) + "..." + text.substring(text.length() - 15);
-        }
-        return text;
-    }
+    private File showFileChooser(boolean isSave) {
+        FileChooser fileChooser = new FileChooser();
+        Window window = textOryginalny.getScene().getWindow();
 
-    // Pobranie danych do hashowania (zależnie czy wybrano plik, czy wpisano tekst)
-    private byte[] getInputData() {
-        if (wprowadzPlikRadio.isSelected()) {
-            return fileData;
+        if (isSave) {
+            return fileChooser.showSaveDialog(window);
         } else {
-            String text = textOryginalny.getText();
-            return text != null ? text.getBytes() : null;
+            return fileChooser.showOpenDialog(window);
         }
-    }
-
-    // Pobranie głównego okna aplikacji dla okienek wyboru plików (FileChooser)
-    private Stage getStage() {
-        return (Stage) generujButton.getScene().getWindow();
     }
 }
