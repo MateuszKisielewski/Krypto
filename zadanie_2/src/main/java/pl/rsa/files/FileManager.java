@@ -1,3 +1,7 @@
+//Autorzy:
+//Mateusz Kisielewski 254779
+//Krzysztof Kata 254776
+
 package pl.rsa.files;
 
 import java.io.File;
