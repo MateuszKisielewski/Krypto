@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class HashUtils {
-    public BigInteger dataToHash (byte[] data) throws NoSuchAlgorithmException {
+    public static BigInteger dataToHash(byte[] data) throws NoSuchAlgorithmException {
         MessageDigest hashData;
         hashData = MessageDigest.getInstance("SHA-256");
         byte[] hashedData = hashData.digest(data);

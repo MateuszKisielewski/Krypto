@@ -6,7 +6,7 @@ import java.security.SecureRandom;
 public class BlindSignature {
     private final SecureRandom sr = new SecureRandom();
 
-    BigInteger[] blindingText(BigInteger m, BigInteger e, BigInteger n){
+    public BigInteger[] blindingText(BigInteger m, BigInteger e, BigInteger n){
         BigInteger r;
 
         do {
@@ -21,17 +21,17 @@ public class BlindSignature {
         return new BigInteger[]{blindedText, r};
     }
 
-    BigInteger signBlindText (BigInteger blindedText, BigInteger d, BigInteger n){
+    public BigInteger signBlindText(BigInteger blindedText, BigInteger d, BigInteger n){
         return blindedText.modPow(d, n);
     }
 
-    BigInteger unblindSignedBlindedText (BigInteger signedBlindedText, BigInteger r, BigInteger n){
+    public BigInteger unblindSignedBlindedText (BigInteger signedBlindedText, BigInteger r, BigInteger n){
         BigInteger rInverse = r.modInverse(n);
         BigInteger signedText = signedBlindedText.multiply(rInverse).mod(n);
         return signedText;
     }
 
-    boolean verifySignedText (BigInteger signedText, BigInteger m, BigInteger e, BigInteger n){
+    public boolean verifySignedText (BigInteger signedText, BigInteger m, BigInteger e, BigInteger n){
         BigInteger decrypted = signedText.modPow(e, n);
         return decrypted.equals(m);
     }

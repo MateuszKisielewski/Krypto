@@ -10,28 +10,30 @@
 <AnchorPane prefHeight="488.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.rsa.gui.MainController">
    <children>
       <TextArea id="textOryginalny" fx:id="textOryginalny" layoutX="14.0" layoutY="227.0" prefHeight="247.0" prefWidth="202.0" promptText="tekst oryginalny" />
-      <TextArea id="textKomunikaty" fx:id="textKomunikaty" layoutX="568.0" layoutY="228.0" prefHeight="247.0" prefWidth="148.0" promptText="komunikaty" />
-      <RadioButton id="wprowadzTekstRadio" fx:id="wprowadzTekstRadio" layoutX="49.0" layoutY="48.0" mnemonicParsing="false" onAction="#onWprowadzTekstRadio" text="Wprowadź tekst">
+      <TextArea id="textKomunikaty" fx:id="textKomunikaty" layoutX="560.0" layoutY="182.0" prefHeight="293.0" prefWidth="157.0" promptText="komunikaty" />
+      <RadioButton id="wprowadzTekstRadio" fx:id="wprowadzTekstRadio" layoutX="24.0" layoutY="24.0" mnemonicParsing="false" onAction="#onWprowadzTekstRadio" text="Wprowadź tekst">
          <toggleGroup>
             <ToggleGroup fx:id="input_type" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton id="wprowadzPlikRadio" fx:id="wprowadzPlikRadio" layoutX="49.0" layoutY="77.0" mnemonicParsing="false" onAction="#onWprowadzPlikRadio" text="Wprowadź z pliku" toggleGroup="$input_type" />
-      <RadioButton id="weryfikujRadio" fx:id="weryfikujRadio" layoutX="439.0" layoutY="366.0" mnemonicParsing="false" onAction="#onWeryfikujRadio" text="Weryfikuj podpis">
+      <RadioButton id="wprowadzPlikRadio" fx:id="wprowadzPlikRadio" layoutX="24.0" layoutY="53.0" mnemonicParsing="false" onAction="#onWprowadzPlikRadio" text="Wprowadź z pliku" toggleGroup="$input_type" />
+      <RadioButton id="weryfikujRadio" fx:id="weryfikujRadio" layoutX="450.0" layoutY="260.0" mnemonicParsing="false" onAction="#onWeryfikujRadio" text="Weryfikuj podpis">
          <toggleGroup>
             <ToggleGroup fx:id="szyfrujweryfukuj" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton id="szyfrujRadio" fx:id="szyfrujRadio" layoutX="439.0" layoutY="334.0" mnemonicParsing="false" onAction="#onSzyfrujRadio" text="Szyfruj" toggleGroup="$szyfrujweryfukuj" />
-      <Button id="zapiszButton" fx:id="zapiszButton" layoutX="469.0" layoutY="395.0" mnemonicParsing="false" onAction="#onZapisz" text="Zapisz" />
-      <Button id="zakrywanieButton" fx:id="zakrywanieButton" layoutX="95.0" layoutY="168.0" mnemonicParsing="false" onAction="#onZakrywanie" text="Zakrywanie tekstu" />
-      <Button id="podpisButton" fx:id="podpisButton" layoutX="246.0" layoutY="168.0" mnemonicParsing="false" onAction="#onPodpis" text="Podpis serwera" />
-      <Button id="odkryjButton" fx:id="odkryjButton" layoutX="380.0" layoutY="169.0" mnemonicParsing="false" onAction="#onOdkryj" text="Odkryj wiadomość" />
-      <Button id="zweryfikujButton" fx:id="zweryfikujButton" layoutX="529.0" layoutY="169.0" mnemonicParsing="false" onAction="#onZweryfikuj" text="Zweryfikuj wiadomość" />
-      <Button id="wczytajButton" fx:id="wczytajButton" layoutX="73.0" layoutY="106.0" mnemonicParsing="false" onAction="#onWczytaj" text="Wczytaj plik" />
-      <Button id="generujButton" fx:id="generujButton" layoutX="505.0" layoutY="48.0" mnemonicParsing="false" onAction="#onGeneruj" text="Generuj klucze" />
+      <RadioButton id="szyfrujRadio" fx:id="szyfrujRadio" layoutX="450.0" layoutY="228.0" mnemonicParsing="false" onAction="#onSzyfrujRadio" text="Szyfruj" toggleGroup="$szyfrujweryfukuj" />
+      <Button id="zapiszButton" fx:id="zapiszButton" layoutX="356.0" layoutY="188.0" mnemonicParsing="false" onAction="#onZapisz" text="Zapisz plik z przestrzeni roboczej" />
+      <Button id="zakrywanieButton" fx:id="zakrywanieButton" layoutX="92.0" layoutY="130.0" mnemonicParsing="false" onAction="#onZakrywanie" text="Zakrywanie tekstu" />
+      <Button id="podpisButton" fx:id="podpisButton" layoutX="243.0" layoutY="130.0" mnemonicParsing="false" onAction="#onPodpis" text="Podpis serwera" />
+      <Button id="odkryjButton" fx:id="odkryjButton" layoutX="377.0" layoutY="131.0" mnemonicParsing="false" onAction="#onOdkryj" text="Odkryj wiadomość" />
+      <Button id="zweryfikujButton" fx:id="zweryfikujButton" layoutX="526.0" layoutY="131.0" mnemonicParsing="false" onAction="#onZweryfikuj" text="Zweryfikuj wiadomość" />
+      <Button id="wczytajTekstOryginalny" fx:id="wczytajButton" layoutX="76.0" layoutY="188.0" mnemonicParsing="false" onAction="#onWczytaj" text="Wczytaj plik" />
+      <Button id="generujButton" fx:id="generujButton" layoutX="583.0" layoutY="49.0" mnemonicParsing="false" onAction="#onGeneruj" text="Generuj klucze" />
       <TextField id="textPublicznyKlucza" fx:id="textPublicznyKlucza" layoutX="557.0" layoutY="14.0" promptText="Publiczny serwera" />
       <TextField id="textPrywatnyKlucz" fx:id="textPrywatnyKlucz" layoutX="389.0" layoutY="15.0" promptText="Prywatny serwera" />
-      <TextArea id="textRobocza" fx:id="textRobocza" layoutX="219.0" layoutY="228.0" prefHeight="247.0" prefWidth="215.0" promptText="przestrzeń robocza" />
+      <TextArea id="textRobocza" fx:id="textRobocza" layoutX="230.0" layoutY="228.0" prefHeight="247.0" prefWidth="215.0" promptText="przestrzeń robocza" />
+      <Button id="wczytajTekstRoboczy" fx:id="wczytajButton1" layoutX="243.0" layoutY="188.0" mnemonicParsing="false" onAction="#onWczytaj" text="Wczytaj plik" />
+      <Button id="zapiszKluczButton" fx:id="zapiszButton1" layoutX="419.0" layoutY="49.0" mnemonicParsing="false" onAction="#onZapisz" text="Zapisz klucze" />
    </children>
 </AnchorPane>
