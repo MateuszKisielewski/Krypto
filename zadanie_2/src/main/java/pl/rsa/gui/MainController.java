@@ -20,12 +20,15 @@ public class MainController {
     @FXML private TextArea textOryginalny;
     @FXML private TextArea textKomunikaty;
     @FXML private TextArea textRobocza;
-    @FXML private TextField textPublicznyKlucza;
-    @FXML private TextField textPrywatnyKlucz;
+    @FXML private TextField e;
+    @FXML private TextField d;
+    @FXML private TextField n;
     @FXML private RadioButton wprowadzTekstRadio;
     @FXML private RadioButton wprowadzPlikRadio;
     @FXML private RadioButton weryfikujRadio;
     @FXML private RadioButton szyfrujRadio;
+    @FXML private ToggleGroup input_type;
+    @FXML private ToggleGroup szyfrujweryfukuj;
     @FXML private Button zakrywanieButton;
     @FXML private Button podpisButton;
     @FXML private Button odkryjButton;
@@ -55,7 +58,7 @@ public class MainController {
     void onWprowadzTekstRadio(ActionEvent event) {
         textOryginalny.setDisable(false);
         wczytajOryginlanyTekstButton.setDisable(true);
-        log("Trya: Wprowadzanie tekstu ręcznie");
+        log("Tryb: Wprowadzanie tekstu ręcznie");
     }
 
     @FXML
@@ -88,9 +91,12 @@ public class MainController {
         RSAKeyGenerator generator = new RSAKeyGenerator();
         rsaKey = generator.generateRSAKey(2048);
 
-        textPublicznyKlucza.setText(rsaKey.getE().toString(16) + ":" + rsaKey.getN().toString(16));
-        textPrywatnyKlucz.setText(rsaKey.getD().toString(16) + ":" + rsaKey.getN().toString(16));
-        log("Wygenerowano nową parę kluczy RSA");
+        // Przypisanie do nowych pól
+        e.setText(rsaKey.getE().toString(16));
+        d.setText(rsaKey.getD().toString(16));
+        n.setText(rsaKey.getN().toString(16));
+
+        log("Wygenerowano nową parę kluczy RSA (2048-bit)");
     }
 
     @FXML
@@ -101,8 +107,8 @@ public class MainController {
             return;
         }
 
-        BigInteger m = HashUtils.dataToHash(originalData);
-        BigInteger[] result = blindSignature.blindingText(m, rsaKey.getE(), rsaKey.getN());
+        BigInteger m_hash = HashUtils.dataToHash(originalData);
+        BigInteger[] result = blindSignature.blindingText(m_hash, rsaKey.getE(), rsaKey.getN());
         currentR = result[1];
 
         textRobocza.setText(result[0].toString(16));
@@ -145,14 +151,13 @@ public class MainController {
         }
 
         BigInteger signedText = new BigInteger(textRobocza.getText().trim(), 16);
-        BigInteger m = HashUtils.dataToHash(originalData);
+        BigInteger m_hash = HashUtils.dataToHash(originalData);
 
-        boolean isVerified = blindSignature.verifySignedText(signedText, m, rsaKey.getE(), rsaKey.getN());
+        boolean isVerified = blindSignature.verifySignedText(signedText, m_hash, rsaKey.getE(), rsaKey.getN());
 
         if (isVerified) {
             log("WYNIK: Weryfikacja POZYTYWNA!");
-        }
-        else {
+        } else {
             log("WYNIK: Weryfikacja NEGATYWNA!");
         }
     }
@@ -187,27 +192,16 @@ public class MainController {
         File file = showFileChooser(true);
         if (file == null) return;
 
-        String pub = textPublicznyKlucza.getText();
-        String priv = textPrywatnyKlucz.getText();
+        String eStr = this.e.getText().trim();
+        String dStr = this.d.getText().trim();
+        String nStr = this.n.getText().trim();
 
-        if (pub.isEmpty() || priv.isEmpty()) {
-            log("Błąd: Brak kluczy do zapisania");
+        if (eStr.isEmpty() || dStr.isEmpty() || nStr.isEmpty()) {
+            log("Błąd: Brak kompletnych kluczy do zapisania (wypełnij e, d oraz n)");
             return;
         }
 
-        String[] pubParts = pub.split(":");
-        String[] privParts = priv.split(":");
-
-        if (pubParts.length != 2 || privParts.length != 2) {
-            log("Błąd: Nieprawidłowy format kluczy w polach tekstowych");
-            return;
-        }
-
-        String e = pubParts[0];
-        String n = pubParts[1];
-        String d = privParts[0];
-
-        String klucze = "e:\n" + e + "\nd:\n" + d + "\nn:\n" + n;
+        String klucze = "e:\n" + eStr + "\nd:\n" + dStr + "\nn:\n" + nStr;
 
         FileManager.saveTextToFile(file, klucze);
         log("Zapisano klucze do: " + file.getName());
@@ -226,16 +220,17 @@ public class MainController {
             String dStr = lines[3].trim();
             String nStr = lines[5].trim();
 
-            textPublicznyKlucza.setText(eStr + ":" + nStr);
-            textPrywatnyKlucz.setText(dStr + ":" + nStr);
+            this.e.setText(eStr);
+            this.d.setText(dStr);
+            this.n.setText(nStr);
 
-                BigInteger e = new BigInteger(eStr, 16);
-                BigInteger d = new BigInteger(dStr, 16);
-                BigInteger n = new BigInteger(nStr, 16);
-                rsaKey = new RSAKey(e, d, n);
-                log("Pomyślnie wczytano klucze z pliku: " + file.getName());
-        }
-        else {
+            BigInteger pubE = new BigInteger(eStr, 16);
+            BigInteger privD = new BigInteger(dStr, 16);
+            BigInteger modN = new BigInteger(nStr, 16);
+
+            rsaKey = new RSAKey(pubE, privD, modN);
+            log("Pomyślnie wczytano klucze z pliku: " + file.getName());
+        } else {
             log("Błąd: Nieprawidłowy format pliku z kluczami.");
         }
     }
