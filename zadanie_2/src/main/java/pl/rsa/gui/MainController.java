@@ -91,7 +91,6 @@ public class MainController {
         RSAKeyGenerator generator = new RSAKeyGenerator();
         rsaKey = generator.generateRSAKey(2048);
 
-        // Przypisanie do nowych pól
         e.setText(rsaKey.getE().toString(16));
         d.setText(rsaKey.getD().toString(16));
         n.setText(rsaKey.getN().toString(16));
