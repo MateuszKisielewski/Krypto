@@ -6,13 +6,20 @@ package pl.rsa.cryptography;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
+/**
+ * Klasa odpowiedzialna za generowanie pary kluczy do algorytmu RSA
+ */
 public class RSAKeyGenerator {
+
+    /**
+     * Obiekt służący do bezpiecznego losowania wartości kryptograficznych
+     */
     SecureRandom rnd = new SecureRandom();
 
     /**
-     *
-     * @param bitLenght
-     * @return
+     * Generuje nową parę kluczy RSA o zadanej wielkości
+     * @param bitLenght Oczekiwana całkowita długość generowanego modułu n w bitach
+     * @return Obiekt klasy RSAKey zawierający wygenerowany klucz publiczny, klucz prywatny oraz moduł n
      */
     public RSAKey generateRSAKey(int bitLenght) {
         BigInteger p = BigInteger.probablePrime(bitLenght / 2, rnd);
@@ -28,7 +35,7 @@ public class RSAKeyGenerator {
         }
 
         BigInteger d = e.modInverse(eulerFunction);
-        
+
         return new RSAKey(e,d,n);
     }
 }
