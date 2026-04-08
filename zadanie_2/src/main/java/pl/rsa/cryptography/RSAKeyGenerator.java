@@ -1,3 +1,6 @@
+//Autorzy:
+//Mateusz Kisielewski 254779
+//Krzysztof Kata 254776
 package pl.rsa.cryptography;
 
 import java.math.BigInteger;
@@ -5,7 +8,12 @@ import java.security.SecureRandom;
 
 public class RSAKeyGenerator {
     SecureRandom rnd = new SecureRandom();
-    
+
+    /**
+     *
+     * @param bitLenght
+     * @return
+     */
     public RSAKey generateRSAKey(int bitLenght) {
         BigInteger p = BigInteger.probablePrime(bitLenght / 2, rnd);
         BigInteger q = BigInteger.probablePrime(bitLenght / 2, rnd);
